@@ -2,7 +2,7 @@
  * Viajes de ejemplo para probar la plataforma.
  * Las fechas se calculan a partir de hoy, así que siempre quedan a futuro.
  *
- * ⚠️ Las URLs de las fotos son de Unsplash y sirven solo como marcador de
+ * IMPORTANTE: las URLs de las fotos son de Unsplash y sirven solo como marcador de
  * posición. Reemplázalas por las fotos reales de la agencia desde el panel.
  */
 import { hoyISO } from '../src/utils/fecha.js';

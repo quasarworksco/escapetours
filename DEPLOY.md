@@ -18,7 +18,7 @@ No hace falta instalar Node, ni compilar, ni pagar hosting.
 2. Modo: elige **Iniciar en modo de producción** (las reglas correctas las
    pegamos en el paso 3; el modo de prueba deja todo abierto al público).
 3. Ubicación: **`nam5 (us-central)`** o **`southamerica-east1`**.
-   ⚠️ La ubicación **no se puede cambiar** después.
+   IMPORTANTE: la ubicación **no se puede cambiar** después.
 
 ### 1.2 Activar Authentication
 
@@ -32,7 +32,7 @@ No hace falta instalar Node, ni compilar, ni pagar hosting.
 
 ### 1.3 Registrar la app web y copiar las credenciales
 
-1. En **⚙ Configuración del proyecto** → sección *Tus apps* → icono **`</>`** (Web).
+1. En **Configuración del proyecto** → sección *Tus apps* → icono **`</>`** (Web).
 2. Apodo: `Escape Tours Web`. **No** marques Firebase Hosting.
 3. Firebase te muestra un bloque `firebaseConfig`. Copia esos valores.
 
@@ -62,7 +62,7 @@ Luego abre `config/brand.js` y ajusta tu número de WhatsApp, Instagram y correo
 
 ---
 
-## Paso 3 — Publicar las reglas de seguridad ⚠️ IMPORTANTE
+## Paso 3 — Publicar las reglas de seguridad (imprescindible)
 
 Sin este paso **cualquiera podría borrar tus viajes**.
 
@@ -75,7 +75,7 @@ Estas reglas garantizan que:
 | Quién | Puede |
 |---|---|
 | Visitante sin sesión | Ver viajes y datos de pago · Crear **una reserva pendiente** |
-| Visitante sin sesión | ❌ Ver reservas de otros · ❌ Confirmar pagos · ❌ Tocar cupos · ❌ Editar viajes |
+| Visitante sin sesión | **No** puede ver reservas de otros, confirmar pagos, tocar cupos ni editar viajes |
 | Admin (sesión + doc en `/admins`) | Todo |
 
 **No hacen falta índices compuestos:** todas las consultas usan un solo filtro y
@@ -92,7 +92,7 @@ auto-promoverse desde la web.
 1. Firestore Database → pestaña **Datos** → **Iniciar colección**.
 2. ID de la colección: `admins` → Siguiente.
 3. **ID del documento:** pega el **UID** que copiaste en el paso 1.2
-   (⚠️ el UID, no tu correo).
+   (el UID, no tu correo).
 4. Agrega los campos:
 
    | Campo | Tipo | Valor |

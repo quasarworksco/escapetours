@@ -13,7 +13,7 @@
 
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Outfit:wght@600;700;800&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@600;700;800&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="styles/tokens.css">
   <link rel="stylesheet" href="styles/base.css">
   <link rel="stylesheet" href="styles/publico.css">
@@ -24,14 +24,14 @@
   <header class="pub-header">
     <div class="et-contenedor pub-header__interior">
       <a class="pub-marca" href="#/">
-        <span class="pub-marca__emoji" id="marca-emoji">🌴</span>
+        <span class="pub-marca__logo" id="marca-logo"></span>
         <span>
           <strong id="marca-nombre">Escape Tours Mcbo</strong>
           <small id="marca-eslogan">Vive Venezuela, un viaje a la vez</small>
         </span>
       </a>
       <a class="et-btn et-btn--wa et-btn--sm" id="btn-wa-header" href="#" target="_blank" rel="noopener">
-        Escríbenos
+        <span id="btn-wa-icono"></span> Escríbenos
       </a>
     </div>
   </header>
@@ -40,16 +40,16 @@
   <main id="vista-calendario">
     <section class="pub-hero">
       <div class="et-contenedor">
-        <h1 id="hero-titulo">Próximos viajes</h1>
-        <p id="hero-subtitulo">Escoge tu destino, aparta tu cupo y nosotros nos encargamos del resto.</p>
+        <h1 id="hero-titulo" class="et-entra">Próximos viajes</h1>
+        <p id="hero-subtitulo" class="et-entra" style="--i:1">Escoge tu destino, aparta tu cupo y nosotros nos encargamos del resto.</p>
       </div>
     </section>
 
     <div class="et-contenedor">
       <nav class="pub-meses" aria-label="Navegación por mes">
-        <button class="pub-meses__flecha" id="mes-anterior" type="button" aria-label="Mes anterior">‹</button>
+        <button class="pub-meses__flecha" id="mes-anterior" type="button" aria-label="Mes anterior"></button>
         <h2 class="pub-meses__actual" id="mes-actual" aria-live="polite">—</h2>
-        <button class="pub-meses__flecha" id="mes-siguiente" type="button" aria-label="Mes siguiente">›</button>
+        <button class="pub-meses__flecha" id="mes-siguiente" type="button" aria-label="Mes siguiente"></button>
       </nav>
 
       <div id="lista-viajes" class="pub-viajes"></div>

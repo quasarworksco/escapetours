@@ -1,6 +1,7 @@
 /** Punto de entrada del panel: sesión, pestañas y orquestación de las vistas. */
 import { el, toast } from '../utils/dom.js';
-import { BRAND, aplicarTemaDeMarca } from '../../config/brand.js';
+import { BRAND, aplicarTemaDeMarca, logoHtml } from '../../config/brand.js';
+import { icono } from '../utils/iconos.js';
 import { FIREBASE_SIN_CONFIGURAR } from '../firebase.js';
 import { mensajeDeError } from '../modelo/errores.js';
 import { iniciarSesion, cerrarSesion, observarSesion } from './auth.js';
@@ -21,9 +22,12 @@ function aplicarMarca() {
   document.title = `Panel · ${BRAND.nombre}`;
   el('#login-titulo').textContent = BRAND.nombre;
   el('#header-nombre').textContent = BRAND.nombre;
-  for (const id of ['#login-emoji', '#header-emoji']) {
-    el(id).textContent = BRAND.logoEmoji;
-  }
+  el('#login-logo').innerHTML = logoHtml(44);
+  el('#header-logo').innerHTML = logoHtml(30);
+  el('#icono-nuevo').innerHTML = icono('mas', { tam: 17 });
+  el('#icono-salir').innerHTML = icono('salir', { tam: 15 });
+  el('#modal-viaje').querySelector('.admin-modal__cerrar').innerHTML = icono('cerrar', { tam: 20 });
+  el('#modal-pago').querySelector('.admin-modal__cerrar').innerHTML = icono('cerrar', { tam: 20 });
 }
 
 // ---------------------------------------------------------------------------
@@ -46,6 +50,12 @@ function cambiarTab(nombre) {
   el('#tab-reservas').hidden = nombre !== 'reservas';
   el('#tab-ajustes').hidden = nombre !== 'ajustes';
   if (nombre === 'ajustes') renderAjustes();
+
+  // Reinicia la animación de entrada de la sección visible.
+  const seccion = el(`#tab-${nombre}`);
+  seccion.classList.remove('et-fundido');
+  void seccion.offsetWidth;            // fuerza el reflow para poder repetirla
+  seccion.classList.add('et-fundido');
 }
 
 // ---------------------------------------------------------------------------

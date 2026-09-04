@@ -18,10 +18,17 @@ export const BRAND = {
     'Viajes y excursiones grupales saliendo desde Maracaibo. Cupos limitados, ' +
     'destinos increíbles y todo coordinado para que solo te preocupes por disfrutar.',
 
-  // Logo: puede ser una URL de imagen externa o null para usar solo el texto.
+  // Logo: marca geométrica en SVG que sigue la paleta definida más abajo.
+  // Para usar una imagen propia, pon aquí su URL en `logoUrl` y se usará en su
+  // lugar. Si defines ambos, manda `logoUrl`.
   logoUrl: null,
-  // Emoji/carácter que acompaña al nombre cuando no hay logo.
-  logoEmoji: '🌴',
+  logoSvg: `
+    <svg viewBox="0 0 40 40" width="36" height="36" role="img" aria-label="Logo">
+      <rect width="40" height="40" rx="11" fill="var(--et-marino)"/>
+      <circle cx="20" cy="16.5" r="7" fill="var(--et-amarillo)"/>
+      <path d="M8.5 27.5h23M12 32.5h16" stroke="var(--et-turquesa)"
+            stroke-width="2.6" stroke-linecap="round"/>
+    </svg>`,
 
   // --- Contacto ------------------------------------------------------------
   // Teléfono en formato internacional SIN "+" ni espacios (requisito de wa.me).
@@ -41,6 +48,15 @@ export const BRAND = {
     arena: '#FFF8EC',          // fondo neutro cálido
     marino: '#0B3B45',         // texto principal, alto contraste
     coral: '#F2603C',          // alertas y estados críticos
+  },
+
+  // --- Tipografía ----------------------------------------------------------
+  // IMPORTANTE: si cambias las familias, actualiza también el <link> de Google Fonts que
+  // hay en index.html, admin.html, 404.html y seed/index.html; de lo contrario
+  // el navegador no tendrá la fuente que le pides y usará la de respaldo.
+  tipografia: {
+    titulos: "'Plus Jakarta Sans', 'Segoe UI', system-ui, sans-serif",
+    texto: "'Inter', system-ui, -apple-system, 'Segoe UI', sans-serif",
   },
 
   // --- Textos de la interfaz pública ---------------------------------------
@@ -95,6 +111,18 @@ export function aplicarTemaDeMarca() {
   raiz.setProperty('--et-arena', c.arena);
   raiz.setProperty('--et-marino', c.marino);
   raiz.setProperty('--et-coral', c.coral);
+
+  if (BRAND.tipografia?.titulos) raiz.setProperty('--et-fuente-titulo', BRAND.tipografia.titulos);
+  if (BRAND.tipografia?.texto) raiz.setProperty('--et-fuente-texto', BRAND.tipografia.texto);
+}
+
+/** Devuelve el logo listo para insertar: imagen propia si la hay, si no la marca SVG. */
+export function logoHtml(alto = 36) {
+  if (BRAND.logoUrl) {
+    return `<img src="${BRAND.logoUrl}" alt="${BRAND.nombre}" height="${alto}"
+                 style="height:${alto}px; width:auto">`;
+  }
+  return BRAND.logoSvg;
 }
 
 /** Arma un enlace wa.me con el mensaje ya redactado. */

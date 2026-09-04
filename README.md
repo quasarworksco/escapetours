@@ -1,9 +1,9 @@
-# 🌴 Escape Tours Mcbo — Plataforma de reservas
+# Escape Tours Mcbo — Plataforma de reservas
 
 Calendario de viajes y sistema de reservas para **Escape Tours Mcbo**
 (Maracaibo, Venezuela). Sitio estático + Firebase, publicado en GitHub Pages.
 
-**👉 Para configurarlo y publicarlo: [DEPLOY.md](DEPLOY.md)**
+**Para configurarlo y publicarlo: [DEPLOY.md](DEPLOY.md)**
 
 ---
 
@@ -48,6 +48,22 @@ Calendario de viajes y sistema de reservas para **Escape Tours Mcbo**
 - Las fotos de los destinos son **URLs externas** (Unsplash, Drive, Instagram…):
   no se sube ningún archivo, no se usa Firebase Storage.
 
+## Diseño
+
+- **Tipografía:** *Plus Jakarta Sans* para titulares e *Inter* para el texto —
+  pareja neutra y corporativa, muy legible en pantallas pequeñas. Se cambian en
+  `config/brand.js` (`BRAND.tipografia`); recuerda actualizar también el `<link>`
+  de Google Fonts en `index.html`, `admin.html`, `404.html` y `seed/index.html`.
+- **Sin emojis:** toda la iconografía son SVG en línea (`src/utils/iconos.js`),
+  con trazo `currentColor`. No añaden peticiones de red ni dependen de cómo cada
+  teléfono dibuje un emoji.
+- **Movimiento:** entradas escalonadas de las tarjetas, zoom lento en las fotos,
+  fundido al cambiar de mes o de pestaña, modales que emergen, barras de cupo que
+  crecen desde cero y un visto bueno que se dibuja al confirmar la reserva. Las
+  duraciones y curvas están en `styles/tokens.css`.
+- **Accesibilidad:** todas las animaciones se desactivan solas si el usuario
+  tiene activada la preferencia del sistema *reducir movimiento*.
+
 ## Estructura
 
 ```
@@ -56,7 +72,7 @@ config/firebase.js   ← credenciales del proyecto Firebase
 firestore.rules      ← reglas de seguridad (pegar en la consola de Firebase)
 src/firebase.js      ← inicialización del SDK
 src/modelo/          ← lógica de negocio: viajes, reservas, pagos, transacciones
-src/utils/           ← fechas (America/Caracas), formato, helpers de DOM
+src/utils/           ← fechas (America/Caracas), formato, iconos SVG, helpers de DOM
 src/publico/         ← calendario, detalle y formulario de reserva
 src/admin/           ← login y pantallas del panel
 styles/              ← tokens de diseño y hojas de estilo

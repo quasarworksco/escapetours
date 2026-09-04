@@ -7,6 +7,7 @@ import { crearReserva } from '../modelo/bookings.js';
 import { obtenerConfig, metodosActivos } from '../modelo/config.js';
 import { mensajeDeError } from '../modelo/errores.js';
 import { BRAND, linkWhatsApp } from '../../config/brand.js';
+import { icono, iconoExito } from '../utils/iconos.js';
 
 // ---------------------------------------------------------------------------
 //  Formulario
@@ -17,10 +18,14 @@ export function montarFormulario(viaje, { onReservado }) {
   if (!form) return;
 
   const personas = el('#r-personas');
+  const caja = document.querySelector('.pub-reserva__total');
   const actualizarTotal = () => {
     const n = Math.max(1, Number.parseInt(personas.value, 10) || 1);
     el('#r-total').textContent = precio((viaje.precio || 0) * n, viaje.moneda);
     el('#r-total-detalle').textContent = n === 1 ? '1 persona' : `${n} personas`;
+    // Pequeño rebote para que se note que la cifra cambió.
+    caja?.classList.add('pub-reserva__total--cambia');
+    setTimeout(() => caja?.classList.remove('pub-reserva__total--cambia'), 180);
   };
   personas.addEventListener('input', actualizarTotal);
   actualizarTotal();
@@ -100,12 +105,12 @@ export async function renderConfirmacion({ viaje, datos, esListaEspera }) {
   const config = await obtenerConfig();
 
   const mensaje =
-    `¡Hola ${BRAND.nombre}! Acabo de reservar por la web.\n\n` +
-    `👤 ${datos.nombre}\n` +
-    `🏝️ ${viaje.destino}\n` +
-    `📅 ${rangoFechas(viaje.fechaInicio, viaje.fechaFin)}\n` +
-    `👥 ${personas} ${personas === 1 ? 'persona' : 'personas'}\n` +
-    `💰 Total: ${precio(total, viaje.moneda)}\n\n` +
+    `Hola ${BRAND.nombre}, acabo de reservar por la web.\n\n` +
+    `Nombre: ${datos.nombre}\n` +
+    `Viaje: ${viaje.destino}\n` +
+    `Fecha: ${rangoFechas(viaje.fechaInicio, viaje.fechaFin)}\n` +
+    `Personas: ${personas}\n` +
+    `Total: ${precio(total, viaje.moneda)}\n\n` +
     (esListaEspera
       ? 'Quedé en lista de espera. ¿Me avisan si se libera un cupo?'
       : 'Quedo atenta/o para coordinar el pago. ¡Gracias!');
@@ -114,29 +119,31 @@ export async function renderConfirmacion({ viaje, datos, esListaEspera }) {
 
   cont.innerHTML = `
     <div class="et-contenedor pub-confirmacion">
-      <div class="pub-confirmacion__icono">${esListaEspera ? '📝' : '🎉'}</div>
-      <h1>${esc(esListaEspera ? BRAND.textos.listaEsperaTitulo : BRAND.textos.reservaTitulo)}</h1>
+      <div class="pub-confirmacion__icono">
+        ${esListaEspera ? icono('lista', { tam: 60, clase: 'et-icono--espera' }) : iconoExito()}
+      </div>
+      <h1 class="et-entra" style="--i:1">${esc(esListaEspera ? BRAND.textos.listaEsperaTitulo : BRAND.textos.reservaTitulo)}</h1>
       <p>${esc(esListaEspera ? BRAND.textos.listaEsperaMensaje : BRAND.textos.reservaMensaje)}</p>
 
-      <div class="pub-confirmacion__caja">
+      <div class="pub-confirmacion__caja et-entra" style="--i:2">
         <h2 style="font-size:var(--et-txt-lg)">Tu reserva</h2>
-        <div class="pub-pago"><span class="pub-pago__nombre">Viaje</span>
+        <div class="pub-pago" style="--n:0"><span class="pub-pago__nombre">Viaje</span>
           <span class="pub-pago__detalle">${esc(viaje.destino)}</span></div>
-        <div class="pub-pago"><span class="pub-pago__nombre">Fecha</span>
+        <div class="pub-pago" style="--n:1"><span class="pub-pago__nombre">Fecha</span>
           <span class="pub-pago__detalle">${esc(rangoFechas(viaje.fechaInicio, viaje.fechaFin))}</span></div>
-        <div class="pub-pago"><span class="pub-pago__nombre">A nombre de</span>
+        <div class="pub-pago" style="--n:2"><span class="pub-pago__nombre">A nombre de</span>
           <span class="pub-pago__detalle">${esc(datos.nombre)}</span></div>
-        <div class="pub-pago"><span class="pub-pago__nombre">Personas</span>
+        <div class="pub-pago" style="--n:3"><span class="pub-pago__nombre">Personas</span>
           <span class="pub-pago__detalle">${personas}</span></div>
-        <div class="pub-pago"><span class="pub-pago__nombre">Total a pagar</span>
+        <div class="pub-pago" style="--n:4"><span class="pub-pago__nombre">Total a pagar</span>
           <span class="pub-pago__detalle"><strong>${esc(precio(total, viaje.moneda))}</strong></span></div>
       </div>
 
       ${metodos.length && !esListaEspera ? `
-        <div class="pub-confirmacion__caja">
+        <div class="pub-confirmacion__caja et-entra" style="--i:3">
           <h2 style="font-size:var(--et-txt-lg)">Cómo pagar</h2>
-          ${metodos.map((m) => `
-            <div class="pub-pago">
+          ${metodos.map((m, i) => `
+            <div class="pub-pago" style="--n:${i}">
               <span class="pub-pago__nombre">${esc(m.nombre)}</span>
               <span class="pub-pago__detalle">${esc(m.detalle)}</span>
             </div>`).join('')}
@@ -144,14 +151,18 @@ export async function renderConfirmacion({ viaje, datos, esListaEspera }) {
             <p class="et-ayuda" style="margin-top:1rem">${esc(config.instruccionesPago)}</p>` : ''}
         </div>` : ''}
 
-      <a class="et-btn et-btn--wa et-btn--bloque" style="margin-top:1.5rem"
+      <a class="et-btn et-btn--wa et-btn--bloque et-entra" style="margin-top:1.5rem; --i:5"
          href="${esc(linkWhatsApp(mensaje))}" target="_blank" rel="noopener">
-        Enviar mi reserva por WhatsApp
+        ${icono('whatsapp', { tam: 18 })} Enviar mi reserva por WhatsApp
       </a>
       <p class="et-ayuda" style="margin-top:.75rem">
         El mensaje ya va escrito: solo pulsa enviar.
       </p>
 
-      <p style="margin-top:2rem"><a href="#/">← Ver otros viajes</a></p>
+      <p style="margin-top:2rem">
+        <a class="pub-detalle__volver" href="#/">
+          ${icono('flechaIzq', { tam: 17, clase: 'et-icono--desliza-izq' })} Ver otros viajes
+        </a>
+      </p>
     </div>`;
 }

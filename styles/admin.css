@@ -41,7 +41,7 @@
   box-shadow: var(--et-sombra-lg);
 }
 .admin-login__marca { text-align: center; margin-bottom: var(--et-5); }
-.admin-login__emoji { font-size: 2.5rem; display: block; }
+.admin-login__logo { display: inline-flex; }
 .admin-login__marca h1 { font-size: var(--et-txt-xl); margin: var(--et-2) 0 0; }
 .admin-login__sub { color: var(--et-texto-suave); font-size: var(--et-txt-sm); margin: 0; }
 .admin-login__pie {
@@ -157,10 +157,22 @@
 .admin-viaje--inactivo { opacity: 0.62; }
 .admin-viaje--lleno { border-color: var(--et-coral); }
 
+.admin-viaje__medio { position: relative; height: 130px; overflow: hidden; }
 .admin-viaje__foto {
+  position: absolute;
+  inset: 0;
   width: 100%;
-  height: 130px;
+  height: 100%;
   object-fit: cover;
+  transition: transform var(--et-t-lenta) var(--et-salida);
+}
+.admin-viaje:hover .admin-viaje__foto { transform: scale(1.04); }
+.admin-viaje__sinfoto {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  color: var(--et-gris-400);
   background: var(--et-gris-100);
 }
 .admin-viaje__cuerpo { padding: var(--et-4); flex: 1; }
@@ -202,19 +214,24 @@
 .admin-cupos__relleno--casi { background: var(--et-amarillo-oscuro); }
 .admin-cupos__relleno--lleno { background: var(--et-coral); }
 .admin-cupos__nota {
+  display: flex;
+  align-items: center;
+  gap: var(--et-1);
   font-size: var(--et-txt-xs);
   color: var(--et-texto-suave);
   margin-top: var(--et-1);
 }
+.admin-cupos__nota--alerta { color: var(--et-alerta); font-weight: 600; }
 
 .admin-viaje__acciones {
-  display: flex;
+  display: grid;
+  grid-template-columns: 1fr auto auto;   /* nunca se parte en dos líneas */
   gap: var(--et-2);
   padding: var(--et-3) var(--et-4);
   border-top: 1px solid var(--et-borde);
   background: var(--et-gris-50);
-  flex-wrap: wrap;
 }
+.admin-viaje__acciones .et-btn { padding-inline: 0.8rem; }
 
 /* --- Filtros -------------------------------------------------------------- */
 .admin-filtros {
@@ -273,12 +290,19 @@
 .admin-reserva__dato dd { margin: 0; font-weight: 600; }
 .admin-reserva__acciones { display: flex; gap: var(--et-2); flex-wrap: wrap; }
 .admin-reserva__pago {
+  display: flex;
+  align-items: center;
+  gap: var(--et-1);
+  flex-wrap: wrap;
+  color: var(--et-exito);
   background: var(--et-exito-suave);
   border-radius: var(--et-radio-sm);
   padding: var(--et-2) var(--et-3);
   font-size: var(--et-txt-sm);
 }
 .admin-reserva__notas {
+  display: flex;
+  gap: var(--et-2);
   background: var(--et-gris-50);
   border-radius: var(--et-radio-sm);
   padding: var(--et-2) var(--et-3);
@@ -309,14 +333,23 @@
 }
 .admin-modal__header h3 { margin: 0; }
 .admin-modal__cerrar {
+  display: grid;
+  place-items: center;
   appearance: none;
   background: none;
   border: none;
-  font-size: 1.6rem;
-  line-height: 1;
+  width: 34px;
+  height: 34px;
+  border-radius: 50%;
   color: var(--et-texto-suave);
   cursor: pointer;
-  padding: 0 var(--et-1);
+  transition: background-color var(--et-transicion), color var(--et-transicion),
+              transform var(--et-t-rapida) var(--et-rebote);
+}
+.admin-modal__cerrar:hover {
+  background: var(--et-gris-100);
+  color: var(--et-texto);
+  transform: rotate(90deg);
 }
 .admin-modal__cuerpo { padding: var(--et-5); overflow-y: auto; }
 .admin-modal__pie {
@@ -344,7 +377,14 @@
   margin-bottom: var(--et-4);
   font-size: var(--et-txt-sm);
 }
-.admin-pago__resumen strong { display: block; font-size: var(--et-txt-base); }
+.admin-pago__cliente {
+  display: block;
+  font-family: var(--et-fuente-titulo);
+  font-weight: 700;
+  font-size: var(--et-txt-base);
+  margin-bottom: 2px;
+}
+.admin-pago__cifra { font-size: var(--et-txt-base); font-weight: 700; }
 
 /* --- Editor de métodos de pago -------------------------------------------- */
 .admin-metodo {
@@ -373,3 +413,70 @@
   cursor: pointer;
 }
 .admin-cupos__enlace:hover { color: var(--et-marino); }
+
+
+/* ==========================================================================
+   Movimiento del panel
+   ========================================================================== */
+
+/* La barra de ocupación crece desde cero al pintarse. */
+.admin-cupos__relleno {
+  animation: et-crecer 900ms var(--et-salida) backwards;
+  animation-delay: calc(var(--i, 0) * var(--et-escalon) + 180ms);
+}
+@keyframes et-crecer { from { width: 0; } }
+
+/* Modales: el fondo se funde y la caja emerge. */
+.admin-modal[open] { animation: et-modal var(--et-t-media) var(--et-salida) backwards; }
+.admin-modal[open]::backdrop { animation: et-fundir var(--et-t-media) var(--et-suave) backwards; }
+@keyframes et-modal {
+  from { opacity: 0; transform: translateY(18px) scale(0.97); }
+  to   { opacity: 1; transform: none; }
+}
+
+/* Tarjetas de viaje: elevación al pasar por encima. */
+.admin-viaje {
+  transition: transform var(--et-t-media) var(--et-salida),
+              box-shadow var(--et-t-media) var(--et-salida),
+              border-color var(--et-transicion);
+}
+.admin-viaje:hover { transform: translateY(-2px); box-shadow: var(--et-sombra); }
+
+/* Pestañas: el subrayado se desliza. */
+.admin-tab { position: relative; transition: color var(--et-transicion); }
+.admin-tab::after {
+  content: '';
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: -3px;
+  height: 3px;
+  background: var(--et-amarillo);
+  transform: scaleX(0);
+  transform-origin: center;
+  transition: transform var(--et-t-media) var(--et-salida);
+}
+.admin-tab[aria-current='page'] {
+  border-bottom-color: transparent;   /* lo dibuja el pseudoelemento animado */
+}
+.admin-tab[aria-current='page']::after { transform: scaleX(1); }
+
+/* El contador de pendientes late al aparecer. */
+.admin-tab__contador { animation: et-latir var(--et-t-lenta) var(--et-rebote) backwards; }
+@keyframes et-latir {
+  from { opacity: 0; transform: scale(0.4); }
+  to   { opacity: 1; transform: none; }
+}
+
+/* Tarjetas de reserva. */
+.admin-reserva {
+  transition: border-left-color var(--et-t-media) var(--et-suave),
+              box-shadow var(--et-t-media) var(--et-salida);
+}
+.admin-reserva:hover { box-shadow: var(--et-sombra-sm); }
+
+/* Vista previa de la foto en el formulario. */
+.admin-preview:not([hidden]) { animation: et-emerger var(--et-t-media) var(--et-salida) backwards; }
+
+/* Enlace de recalcular. */
+.admin-cupos__enlace { transition: color var(--et-transicion); }

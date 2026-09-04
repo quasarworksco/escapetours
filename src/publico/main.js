@@ -5,7 +5,8 @@
  *   #/viaje/<id>       → detalle del viaje (enlace compartible por WhatsApp)
  */
 import { el, mostrar } from '../utils/dom.js';
-import { BRAND, aplicarTemaDeMarca, linkWhatsApp } from '../../config/brand.js';
+import { BRAND, aplicarTemaDeMarca, linkWhatsApp, logoHtml } from '../../config/brand.js';
+import { icono } from '../utils/iconos.js';
 import { FIREBASE_SIN_CONFIGURAR } from '../firebase.js';
 import { initCalendario } from './calendario.js';
 import { renderDetalle } from './detalle.js';
@@ -23,7 +24,10 @@ function aplicarMarca() {
   el('#og-title').content = document.title;
   el('#og-desc').content = BRAND.descripcion;
 
-  el('#marca-emoji').textContent = BRAND.logoEmoji;
+  el('#marca-logo').innerHTML = logoHtml(36);
+  el('#btn-wa-icono').innerHTML = icono('whatsapp', { tam: 16 });
+  el('#mes-anterior').innerHTML = icono('chevronIzq', { tam: 22 });
+  el('#mes-siguiente').innerHTML = icono('chevronDer', { tam: 22 });
   el('#marca-nombre').textContent = BRAND.nombre;
   el('#marca-eslogan').textContent = BRAND.eslogan;
   el('#hero-titulo').textContent = BRAND.textos.heroTitulo;
@@ -40,11 +44,11 @@ function aplicarMarca() {
   if (BRAND.instagram) {
     enlaces.insertAdjacentHTML('beforeend',
       `<a href="https://instagram.com/${BRAND.instagram}" target="_blank" rel="noopener">
-         @${BRAND.instagram}</a>`);
+         ${icono('instagram', { tam: 16 })} @${BRAND.instagram}</a>`);
   }
   enlaces.insertAdjacentHTML('beforeend',
     `<a href="${el('#btn-wa-header').href}" target="_blank" rel="noopener">
-       ${BRAND.whatsappVisible}</a>`);
+       ${icono('whatsapp', { tam: 16 })} ${BRAND.whatsappVisible}</a>`);
 }
 
 // ---------------------------------------------------------------------------

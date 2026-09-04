@@ -42,7 +42,10 @@
   --et-error-suave: #FCEAE8;
 
   /* --- Tipografía ------------------------------------------------------- */
-  --et-fuente-titulo: 'Outfit', 'Trebuchet MS', system-ui, sans-serif;
+  /* Plus Jakarta Sans para titulares e Inter para texto: pareja neutra y
+     corporativa, con excelente legibilidad en pantallas pequeñas.
+     Se pueden sustituir desde config/brand.js (BRAND.tipografia). */
+  --et-fuente-titulo: 'Plus Jakarta Sans', 'Segoe UI', system-ui, sans-serif;
   --et-fuente-texto: 'Inter', system-ui, -apple-system, 'Segoe UI', sans-serif;
   --et-txt-xs: 0.75rem;
   --et-txt-sm: 0.875rem;
@@ -76,7 +79,17 @@
                   0 28px 60px rgba(11, 59, 69, 0.12);
 
   --et-ancho-max: 1120px;
-  --et-transicion: 160ms cubic-bezier(0.4, 0, 0.2, 1);
+
+  /* --- Movimiento --------------------------------------------------------- */
+  --et-suave: cubic-bezier(0.4, 0, 0.2, 1);      /* transiciones cortas */
+  --et-salida: cubic-bezier(0.16, 1, 0.3, 1);    /* entradas: rápido y frena  */
+  --et-rebote: cubic-bezier(0.34, 1.56, 0.64, 1);/* microinteracciones        */
+  --et-t-rapida: 140ms;
+  --et-t-media: 260ms;
+  --et-t-lenta: 520ms;
+  --et-transicion: var(--et-t-rapida) var(--et-suave);
+  /* Retraso entre elementos de una misma lista, para la entrada escalonada. */
+  --et-escalon: 65ms;
 }
 
 /* Respeta a quien pide menos movimiento. */

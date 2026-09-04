@@ -9,7 +9,7 @@
  *  DE SEGURIDAD de Firestore (ver firestore.rules).
  *
  *  CÓMO OBTENER ESTOS VALORES:
- *  Consola de Firebase → ⚙ Configuración del proyecto → "Tus apps" → app web
+ *  Consola de Firebase → Configuración del proyecto → "Tus apps" → app web
  *  → sección "SDK setup and configuration" → opción "Config".
  *  El paso a paso completo está en DEPLOY.md.
  * ============================================================================

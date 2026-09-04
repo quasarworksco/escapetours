@@ -9,6 +9,7 @@ import {
 import { resumirReservas } from '../modelo/bookings.js';
 import { mensajeDeError } from '../modelo/errores.js';
 import { BRAND } from '../../config/brand.js';
+import { icono } from '../utils/iconos.js';
 import { estado, recargarDatos, reservasDe } from './estado.js';
 
 let viajeEnEdicion = null;
@@ -36,15 +37,19 @@ export function renderViajes() {
 
   if (!estado.viajes.length) {
     cont.innerHTML = `
-      <div class="et-vacio">
-        <div class="et-vacio__emoji">🗺️</div>
-        <p>Todavía no hay viajes cargados.<br>Crea el primero con el botón <strong>+ Nuevo viaje</strong>.</p>
+      <div class="et-vacio et-fundido">
+        <div class="et-vacio__icono">${icono('mapa', { tam: 34 })}</div>
+        <p>Todavía no hay viajes cargados.<br>Crea el primero con el botón <strong>Nuevo viaje</strong>.</p>
       </div>`;
     return;
   }
 
   cont.innerHTML = '';
-  for (const viaje of estado.viajes) cont.append(tarjetaViaje(viaje));
+  estado.viajes.forEach((viaje, i) => {
+    const nodo = tarjetaViaje(viaje);
+    nodo.style.setProperty('--i', i);
+    cont.append(nodo);
+  });
 }
 
 function tarjetaViaje(viaje) {
@@ -54,16 +59,20 @@ function tarjetaViaje(viaje) {
   const lleno = estaLleno(viaje);
   const casi = !lleno && disponibles <= BRAND.reglas.umbralUltimosCupos;
 
-  const clases = ['admin-viaje'];
+  const clases = ['admin-viaje', 'et-entra'];
   if (viaje.estado !== 'activo') clases.push('admin-viaje--inactivo');
   if (lleno) clases.push('admin-viaje--lleno');
 
   const nodo = crear('article', { class: clases.join(' ') });
 
-  const foto = urlImagenValida(viaje.fotoUrl)
-    ? `<img class="admin-viaje__foto" src="${esc(viaje.fotoUrl)}" alt="" loading="lazy"
-            onerror="this.style.display='none'">`
-    : '';
+  const foto = `
+    <div class="admin-viaje__medio">
+      <div class="admin-viaje__sinfoto">${icono('imagen', { tam: 22 })}</div>
+      ${urlImagenValida(viaje.fotoUrl)
+        ? `<img class="admin-viaje__foto" src="${esc(viaje.fotoUrl)}" alt=""
+                loading="lazy" onerror="this.remove()">`
+        : ''}
+    </div>`;
 
   const chipEstado = {
     activo: '',
@@ -78,8 +87,9 @@ function tarjetaViaje(viaje) {
       : '';
 
   const avisoEspera = res.personasPendientes > 0 && lleno
-    ? `<p class="admin-cupos__nota">⚠️ ${pluralizar(res.personasPendientes, 'persona', 'personas')}
-       en lista de espera.</p>`
+    ? `<p class="admin-cupos__nota admin-cupos__nota--alerta">
+         ${icono('alerta', { tam: 14 })}
+         ${pluralizar(res.personasPendientes, 'persona', 'personas')} en lista de espera.</p>`
     : res.personasPendientes > 0
       ? `<p class="admin-cupos__nota">${pluralizar(res.personasPendientes, 'persona pendiente', 'personas pendientes')}
          de verificar pago.</p>`
@@ -118,7 +128,7 @@ function tarjetaViaje(viaje) {
     </div>
     <div class="admin-viaje__acciones">
       <button class="et-btn et-btn--mar et-btn--sm" data-accion="reservas">
-        Reservas${res.pendientes ? ` (${res.pendientes} pend.)` : ''}
+        Reservas${res.pendientes ? ` (${res.pendientes})` : ''}
       </button>
       <button class="et-btn et-btn--contorno et-btn--sm" data-accion="editar">Editar</button>
       <button class="et-btn et-btn--peligro et-btn--sm" data-accion="eliminar">Eliminar</button>
@@ -151,7 +161,7 @@ async function alRecalcular(boton, viaje) {
 async function alEliminar(viaje, resumen) {
   const total = resumen.pendientes + resumen.confirmadas;
   const advertencia = total
-    ? `\n\n⚠️ Este viaje tiene ${total} reservas asociadas. Las reservas NO se borran ` +
+    ? `\n\nATENCIÓN: este viaje tiene ${total} reservas asociadas. Las reservas NO se borran ` +
       'y quedarán apuntando a un viaje inexistente. Si el viaje no se va a realizar, ' +
       'es mejor marcarlo como "Cancelado" desde Editar.'
     : '';

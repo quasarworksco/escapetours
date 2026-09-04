@@ -212,7 +212,14 @@ img { max-width: 100%; display: block; }
   padding: var(--et-7) var(--et-4);
   color: var(--et-texto-suave);
 }
-.et-vacio__emoji { font-size: 2.5rem; margin-bottom: var(--et-2); }
+.et-vacio__icono {
+  display: inline-flex;
+  padding: var(--et-3);
+  border-radius: 50%;
+  background: var(--et-gris-100);
+  color: var(--et-gris-600);
+  margin-bottom: var(--et-3);
+}
 
 .et-esqueleto {
   background: linear-gradient(90deg, var(--et-gris-100) 25%, var(--et-gris-50) 50%, var(--et-gris-100) 75%);
@@ -244,3 +251,84 @@ img { max-width: 100%; display: block; }
   from { opacity: 0; transform: translate(-50%, 12px); }
   to   { opacity: 1; transform: translate(-50%, 0); }
 }
+
+/* ==========================================================================
+   Movimiento
+   Todo lo de aquí queda desactivado automáticamente para quien tenga activada
+   la preferencia "reducir movimiento" (ver el bloque al final de tokens.css).
+   ========================================================================== */
+
+@keyframes et-entrar {
+  from { opacity: 0; transform: translateY(16px); }
+  to   { opacity: 1; transform: none; }
+}
+@keyframes et-fundir {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+@keyframes et-emerger {
+  from { opacity: 0; transform: translateY(10px) scale(0.97); }
+  to   { opacity: 1; transform: none; }
+}
+@keyframes et-deslizar-der {
+  from { opacity: 0; transform: translateX(-14px); }
+  to   { opacity: 1; transform: none; }
+}
+
+/* Entrada escalonada: basta con poner style="--i:3" en cada elemento. */
+.et-entra {
+  animation: et-entrar var(--et-t-lenta) var(--et-salida) backwards;
+  animation-delay: calc(var(--i, 0) * var(--et-escalon));
+}
+.et-fundido { animation: et-fundir var(--et-t-media) var(--et-suave) backwards; }
+
+/* --- Iconos --------------------------------------------------------------- */
+.et-icono {
+  flex: none;
+  vertical-align: -0.18em;
+  transition: transform var(--et-transicion);
+}
+.et-btn .et-icono { vertical-align: 0; }
+
+/* --- Marca de éxito animada ----------------------------------------------- */
+.et-exito { color: var(--et-exito); }
+.et-exito__circulo {
+  stroke-dasharray: 152;
+  stroke-dashoffset: 152;
+  animation: et-trazar 620ms var(--et-salida) forwards;
+}
+.et-exito__trazo {
+  stroke-dasharray: 40;
+  stroke-dashoffset: 40;
+  animation: et-trazar 380ms var(--et-salida) 460ms forwards;
+}
+@keyframes et-trazar { to { stroke-dashoffset: 0; } }
+
+/* --- Botones: microinteracción -------------------------------------------- */
+/* El velo de pulsación va en ::before porque ::after ya lo ocupa el spinner. */
+.et-btn { position: relative; overflow: hidden; }
+.et-btn::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: currentColor;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity var(--et-transicion);
+}
+.et-btn:active:not(:disabled)::before { opacity: 0.1; }
+
+/* Solo se desplazan los iconos marcados como direccionales. */
+.et-btn:hover:not(:disabled) .et-icono--desliza { transform: translateX(3px); }
+.et-btn:hover:not(:disabled) .et-icono--desliza-izq { transform: translateX(-3px); }
+
+/* --- Campos: foco progresivo ---------------------------------------------- */
+.et-input, .et-select, .et-textarea {
+  transition: border-color var(--et-transicion),
+              box-shadow var(--et-t-media) var(--et-suave),
+              background-color var(--et-transicion);
+}
+
+/* --- Avisos que aparecen --------------------------------------------------- */
+.et-aviso:not([hidden]) { animation: et-emerger var(--et-t-media) var(--et-salida) backwards; }
+.et-error-campo:not([hidden]) { animation: et-deslizar-der var(--et-t-rapida) var(--et-suave) backwards; }

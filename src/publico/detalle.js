@@ -6,6 +6,7 @@ import { obtenerViaje, cuposDisponibles, estaLleno } from '../modelo/trips.js';
 import { mensajeDeError } from '../modelo/errores.js';
 import { BRAND } from '../../config/brand.js';
 import { montarFormulario } from './reserva.js';
+import { icono } from '../utils/iconos.js';
 
 export async function renderDetalle(tripId, { onVolver, onReservado }) {
   const cont = el('#vista-detalle');
@@ -17,7 +18,7 @@ export async function renderDetalle(tripId, { onVolver, onReservado }) {
   } catch (err) {
     cont.innerHTML = `
       <div class="et-contenedor">
-        <a class="pub-detalle__volver" href="#/">← Volver a los viajes</a>
+        <a class="pub-detalle__volver" href="#/">${icono('flechaIzq', { tam: 17, clase: 'et-icono--desliza-izq' })} Volver a los viajes</a>
         <div class="et-aviso et-aviso--error">${esc(mensajeDeError(err))}</div>
       </div>`;
     return;
@@ -26,7 +27,7 @@ export async function renderDetalle(tripId, { onVolver, onReservado }) {
   if (viaje.estado !== 'activo' || yaPaso(viaje.fechaFin || viaje.fechaInicio)) {
     cont.innerHTML = `
       <div class="et-contenedor">
-        <a class="pub-detalle__volver" href="#/">← Volver a los viajes</a>
+        <a class="pub-detalle__volver" href="#/">${icono('flechaIzq', { tam: 17, clase: 'et-icono--desliza-izq' })} Volver a los viajes</a>
         <div class="et-aviso et-aviso--alerta">
           Este viaje ya no está disponible. Escríbenos por WhatsApp y te contamos
           cuál es el próximo destino.
@@ -42,20 +43,23 @@ export async function renderDetalle(tripId, { onVolver, onReservado }) {
 
   const portada = urlImagenValida(viaje.fotoUrl)
     ? `<img class="pub-detalle__portada" src="${esc(viaje.fotoUrl)}" alt="${esc(viaje.destino)}"
-            onerror="this.alt=''; this.removeAttribute('src')">`
+            onerror="this.classList.add('pub-detalle__portada--vacia'); this.removeAttribute('src')">`
     : '<div class="pub-detalle__portada"></div>';
 
-  const lista = (titulo, items, clase = '') => items?.length ? `
+  const lista = (titulo, items, marca) => items?.length ? `
     <section class="pub-bloque">
       <h2>${titulo}</h2>
-      <ul class="pub-lista ${clase}">
-        ${items.map((i) => `<li>${esc(i)}</li>`).join('')}
+      <ul class="pub-lista">
+        ${items.map((i, n) => `
+          <li class="et-entra" style="--i:${n}">
+            <span class="pub-lista__marca">${marca}</span>${esc(i)}
+          </li>`).join('')}
       </ul>
     </section>` : '';
 
   cont.innerHTML = `
     <div class="et-contenedor">
-      <a class="pub-detalle__volver" href="#/">← Volver a los viajes</a>
+      <a class="pub-detalle__volver" href="#/">${icono('flechaIzq', { tam: 17, clase: 'et-icono--desliza-izq' })} Volver a los viajes</a>
       ${portada}
 
       <div class="pub-detalle__grid">
@@ -71,13 +75,13 @@ export async function renderDetalle(tripId, { onVolver, onReservado }) {
           ${viaje.descripcion ? `
             <section class="pub-bloque"><p>${esc(viaje.descripcion)}</p></section>` : ''}
 
-          ${lista('Qué incluye', viaje.incluye)}
-          ${lista('Itinerario', viaje.itinerario, 'pub-lista--itinerario')}
+          ${lista('Qué incluye', viaje.incluye, icono('check', { tam: 16 }))}
+          ${lista('Itinerario', viaje.itinerario, '<span class="pub-lista__punto"></span>')}
 
           ${viaje.puntoEncuentro ? `
             <section class="pub-bloque">
               <h2>Punto de encuentro</h2>
-              <p>📍 ${esc(viaje.puntoEncuentro)}</p>
+              <p class="pub-punto">${icono('ubicacion', { tam: 18 })} ${esc(viaje.puntoEncuentro)}</p>
             </section>` : ''}
         </div>
 

@@ -28,14 +28,14 @@ async function cargar(boton) {
       for (const viaje of VIAJES_EJEMPLO) {
         const clave = `${viaje.destino}|${viaje.fechaInicio}`;
         if (yaEstan.has(clave)) {
-          registro(`↷ "${viaje.destino}" ya existía, se omite.`);
+          registro(`Omitido: "${viaje.destino}" ya existía.`);
           const previo = existentes.find((v) => `${v.destino}|${v.fechaInicio}` === clave);
           idPorDestino[viaje.destino] = previo.id;
           continue;
         }
         const id = await crearViaje(viaje);
         idPorDestino[viaje.destino] = id;
-        registro(`✔ Viaje creado: ${viaje.destino}`, 'ok');
+        registro(`Viaje creado: ${viaje.destino}`, 'ok');
       }
 
       if (el('#incluir-reservas').checked) {
@@ -51,7 +51,7 @@ async function cargar(boton) {
             personas: r.personas,
             notas: 'Reserva de ejemplo',
           });
-          registro(`✔ Reserva creada: ${r.nombre} (${r.personas}p · ${r.destino})`, 'ok');
+          registro(`Reserva creada: ${r.nombre} (${r.personas}p, ${r.destino})`, 'ok');
 
           if (r.confirmar) {
             await confirmarReserva(id, {
@@ -62,7 +62,7 @@ async function cargar(boton) {
               notas: 'Pago de ejemplo',
               registradoPor: nombreAdmin(),
             });
-            registro(`  ↳ pago confirmado, ${r.personas} cupos descontados`, 'ok');
+            registro(`   pago confirmado, ${r.personas} cupos descontados`, 'ok');
           }
         }
       }
@@ -71,7 +71,7 @@ async function cargar(boton) {
       registro('Listo. Abre el panel para verlo.', 'ok');
       toast('Datos de ejemplo cargados.', 'ok');
     } catch (err) {
-      registro('✖ ' + mensajeDeError(err), 'error');
+      registro('Error: ' + mensajeDeError(err), 'error');
       toast(mensajeDeError(err), 'error');
     }
   });

@@ -24,7 +24,11 @@
   text-decoration: none;
   color: var(--et-marino);
 }
-.pub-marca__emoji { font-size: 1.6rem; }
+.pub-marca__logo {
+  display: inline-flex;
+  transition: transform var(--et-t-media) var(--et-rebote);
+}
+.pub-marca:hover .pub-marca__logo { transform: rotate(-6deg) scale(1.05); }
 .pub-marca strong {
   display: block;
   font-family: var(--et-fuente-titulo);
@@ -115,17 +119,15 @@
 
 .pub-viaje__medio { position: relative; aspect-ratio: 16 / 10; }
 .pub-viaje__foto {
+  position: absolute;
+  inset: 0;
   width: 100%;
   height: 100%;
   object-fit: cover;
-  background: linear-gradient(135deg, var(--et-turquesa-suave), var(--et-amarillo-suave));
 }
 .pub-viaje__sinfoto {
-  display: grid;
-  place-content: center;
-  width: 100%;
-  height: 100%;
-  font-size: 2.5rem;
+  position: absolute;
+  inset: 0;
   background: linear-gradient(135deg, var(--et-turquesa-suave), var(--et-amarillo-suave));
 }
 .pub-viaje__cintas {
@@ -205,6 +207,7 @@
   border-radius: var(--et-radio-lg);
   background: linear-gradient(135deg, var(--et-turquesa-suave), var(--et-amarillo-suave));
 }
+.pub-detalle__portada--vacia { object-fit: none; }
 @media (min-width: 900px) {
   .pub-detalle__grid {
     display: grid;
@@ -223,20 +226,28 @@
 }
 .pub-bloque { margin-bottom: var(--et-5); }
 .pub-bloque h2 { font-size: var(--et-txt-lg); margin-bottom: var(--et-2); }
+.pub-punto { display: flex; gap: var(--et-2); align-items: center; }
+.pub-punto .et-icono { color: var(--et-coral); }
 .pub-lista { margin: 0; padding: 0; list-style: none; }
 .pub-lista li {
-  position: relative;
-  padding-left: 1.6rem;
+  display: flex;
+  gap: var(--et-2);
+  align-items: flex-start;
   margin-bottom: var(--et-2);
 }
-.pub-lista li::before {
-  content: '✓';
-  position: absolute;
-  left: 0;
+.pub-lista__marca {
+  display: inline-flex;
   color: var(--et-turquesa-oscuro);
-  font-weight: 700;
+  margin-top: 0.2em;
 }
-.pub-lista--itinerario li::before { content: '•'; font-size: 1.3rem; line-height: 1; }
+.pub-lista__punto {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: var(--et-turquesa);
+  margin-top: 0.55em;
+  flex: none;
+}
 
 .pub-reserva {
   background: var(--et-superficie);
@@ -305,9 +316,96 @@
 }
 .pub-footer p { margin: 0 0 var(--et-1); }
 .pub-footer strong { color: var(--et-blanco); font-size: var(--et-txt-lg); }
-.pub-footer__enlaces { margin-top: var(--et-3); display: flex; gap: var(--et-4); justify-content: center; }
+.pub-footer__enlaces {
+  margin-top: var(--et-4);
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--et-3) var(--et-5);
+  justify-content: center;
+}
 .pub-footer a { color: var(--et-amarillo); }
 .pub-footer__admin { margin-top: var(--et-4); font-size: var(--et-txt-xs); opacity: 0.6; }
 
 /* --- Esqueletos de carga -------------------------------------------------- */
 .pub-esqueleto { border-radius: var(--et-radio-lg); height: 340px; }
+
+
+/* ==========================================================================
+   Movimiento del sitio público
+   ========================================================================== */
+
+/* La foto de la tarjeta hace un zoom lento al pasar por encima. */
+.pub-viaje__medio { overflow: hidden; }
+.pub-viaje__foto,
+.pub-viaje__sinfoto {
+  transition: transform var(--et-t-lenta) var(--et-salida);
+}
+.pub-viaje:hover .pub-viaje__foto,
+.pub-viaje:focus-visible .pub-viaje__foto { transform: scale(1.07); }
+
+/* La cinta de la fecha y la etiqueta de estado entran un instante después. */
+.pub-viaje__cintas > * {
+  animation: et-emerger var(--et-t-media) var(--et-salida) backwards;
+  animation-delay: calc(var(--i, 0) * var(--et-escalon) + 220ms);
+}
+
+/* Flechas del selector de mes. */
+.pub-meses__flecha {
+  display: grid;
+  place-items: center;
+  transition: transform var(--et-t-rapida) var(--et-rebote),
+              border-color var(--et-transicion), color var(--et-transicion);
+}
+.pub-meses__flecha:hover:not(:disabled) { transform: scale(1.1); }
+.pub-meses__flecha:active:not(:disabled) { transform: scale(0.94); }
+
+/* El nombre del mes se funde al cambiar (la clave cambia con el mes). */
+.pub-meses__actual { animation: et-fundir var(--et-t-media) var(--et-suave) backwards; }
+
+/* Vistas: cada una entra al mostrarse. */
+#vista-detalle:not([hidden]),
+#vista-confirmacion:not([hidden]) {
+  animation: et-entrar var(--et-t-media) var(--et-salida) backwards;
+}
+
+/* Caja de reserva: entra desde la derecha en escritorio. */
+.pub-reserva { animation: et-emerger var(--et-t-lenta) var(--et-salida) 120ms backwards; }
+
+/* Portada del detalle. */
+.pub-detalle__portada { animation: et-fundir var(--et-t-lenta) var(--et-suave) backwards; }
+
+/* Enlace de volver: la flecha se desplaza al pasar por encima. */
+.pub-detalle__volver .et-icono { transition: transform var(--et-t-rapida) var(--et-suave); }
+.pub-detalle__volver:hover .et-icono { transform: translateX(-4px); }
+
+/* Total estimado: parpadeo suave cuando cambia la cantidad de personas. */
+.pub-reserva__total strong { transition: transform var(--et-t-rapida) var(--et-rebote); }
+.pub-reserva__total--cambia strong { transform: scale(1.08); }
+
+/* Filas de la confirmación, una tras otra. */
+.pub-confirmacion__caja .pub-pago {
+  animation: et-deslizar-der var(--et-t-media) var(--et-salida) backwards;
+  animation-delay: calc(var(--n, 0) * 45ms + 200ms);
+}
+
+/* Icono de lista de espera. */
+.et-icono--espera {
+  color: var(--et-turquesa-oscuro);
+  animation: et-emerger var(--et-t-lenta) var(--et-rebote) backwards;
+}
+
+/* Enlaces del pie. */
+.pub-footer__enlaces a {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--et-2);
+  white-space: nowrap;
+  text-decoration: none;
+  border-bottom: 1.5px solid transparent;
+  padding-bottom: 2px;
+  transition: transform var(--et-transicion), border-color var(--et-transicion);
+}
+.pub-footer__enlaces a:hover {
+  transform: translateY(-2px);
+  border-bottom-color: currentColor;
+}

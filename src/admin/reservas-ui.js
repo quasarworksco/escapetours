@@ -9,6 +9,7 @@ import {
 import { metodosActivos } from '../modelo/config.js';
 import { mensajeDeError } from '../modelo/errores.js';
 import { BRAND, linkWhatsApp } from '../../config/brand.js';
+import { icono } from '../utils/iconos.js';
 import { estado, recargarDatos, viajePorId } from './estado.js';
 import { nombreAdmin } from './auth.js';
 
@@ -39,15 +40,19 @@ export function renderReservas() {
 
   if (!visibles.length) {
     cont.innerHTML = `
-      <div class="et-vacio">
-        <div class="et-vacio__emoji">📭</div>
+      <div class="et-vacio et-fundido">
+        <div class="et-vacio__icono">${icono('bandeja', { tam: 34 })}</div>
         <p>No hay reservas que coincidan con este filtro.</p>
       </div>`;
     return;
   }
 
   cont.innerHTML = '';
-  for (const reserva of visibles) cont.append(tarjetaReserva(reserva));
+  visibles.forEach((reserva, i) => {
+    const nodo = tarjetaReserva(reserva);
+    nodo.style.setProperty('--i', Math.min(i, 8));  // el retraso se corta a los 8
+    cont.append(nodo);
+  });
 }
 
 function filtrar(reservas) {
@@ -88,7 +93,7 @@ function actualizarContadorPendientes() {
 function tarjetaReserva(reserva) {
   const viaje = viajePorId(reserva.tripId);
   const est = ESTADOS[reserva.estado] || ESTADOS.pendiente;
-  const nodo = crear('article', { class: `admin-reserva admin-reserva--${reserva.estado}` });
+  const nodo = crear('article', { class: `admin-reserva et-entra admin-reserva--${reserva.estado}` });
 
   const personas = reserva.estado === 'confirmada'
     ? (reserva.personasConfirmadas ?? reserva.cantidadPersonas)
@@ -141,11 +146,12 @@ function tarjetaReserva(reserva) {
     </dl>
 
     ${reserva.notasCliente ? `
-      <p class="admin-reserva__notas">💬 ${esc(reserva.notasCliente)}</p>` : ''}
+      <p class="admin-reserva__notas">
+        ${icono('nota', { tam: 15 })} ${esc(reserva.notasCliente)}</p>` : ''}
 
     ${reserva.estado === 'confirmada' && reserva.ultimoPago ? `
       <p class="admin-reserva__pago">
-        ✅ ${esc(reserva.ultimoPago.metodoPago)} ·
+        ${icono('checkCirculo', { tam: 15 })} ${esc(reserva.ultimoPago.metodoPago)} ·
         ${esc(precio(reserva.ultimoPago.montoPagado))} ·
         ${esc(fechaNumerica(reserva.ultimoPago.fechaPago))}
         ${reserva.ultimoPago.registradoPor ? `· registró ${esc(reserva.ultimoPago.registradoPor)}` : ''}
@@ -163,7 +169,7 @@ function tarjetaReserva(reserva) {
     href: linkWhatsApp(mensajeParaCliente(reserva, viaje), reserva.telefonoCliente),
     target: '_blank',
     rel: 'noopener',
-    text: 'WhatsApp',
+    html: `${icono('whatsapp', { tam: 15 })} WhatsApp`,
   }));
 
   if (reserva.estado === 'pendiente') {
@@ -205,11 +211,11 @@ function tarjetaReserva(reserva) {
 function mensajeParaCliente(reserva, viaje) {
   const nombre = reserva.nombreCliente.split(' ')[0];
   if (reserva.estado === 'confirmada') {
-    return `¡Hola ${nombre}! Tu cupo para ${reserva.tripDestino} está CONFIRMADO ✅ ` +
+    return `Hola ${nombre}, tu cupo para ${reserva.tripDestino} está CONFIRMADO. ` +
       'Cualquier duda nos escribes por aquí.';
   }
   const total = viaje ? ` El total son ${precio((viaje.precio || 0) * reserva.cantidadPersonas)}.` : '';
-  return `¡Hola ${nombre}! Te escribimos de ${BRAND.nombre} por tu reserva de ` +
+  return `Hola ${nombre}, te escribimos de ${BRAND.nombre} por tu reserva de ` +
     `${reserva.cantidadPersonas} ${reserva.cantidadPersonas === 1 ? 'persona' : 'personas'} ` +
     `para ${reserva.tripDestino}.${total} ¿Coordinamos el pago?`;
 }
@@ -253,11 +259,12 @@ function abrirModalPago(reserva, viaje) {
   const totalEsperado = viaje ? (viaje.precio || 0) * reserva.cantidadPersonas : 0;
 
   el('#pago-resumen').innerHTML = `
-    <strong>${esc(reserva.nombreCliente)}</strong>
+    <span class="admin-pago__cliente">${esc(reserva.nombreCliente)}</span>
     ${esc(reserva.tripDestino)} ·
     ${pluralizar(reserva.cantidadPersonas, 'persona solicitada', 'personas solicitadas')} ·
     total esperado ${esc(precio(totalEsperado, viaje?.moneda))}
-    <br>Cupos libres en el viaje: <strong>${disponibles}</strong> de ${viaje?.cupoMaximo ?? '?'}`;
+    <br>Cupos libres en el viaje:
+    <b class="admin-pago__cifra">${disponibles}</b> de ${viaje?.cupoMaximo ?? '?'}`;
 
   const selector = el('#pago-metodo');
   selector.innerHTML = '';

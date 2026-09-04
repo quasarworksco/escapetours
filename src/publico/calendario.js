@@ -6,6 +6,7 @@ import {
 } from '../utils/fecha.js';
 import { viajesDelMes, mesesConViajes, cuposDisponibles, estaLleno } from '../modelo/trips.js';
 import { mensajeDeError } from '../modelo/errores.js';
+import { icono } from '../utils/iconos.js';
 import { BRAND } from '../../config/brand.js';
 
 let mes = mesActual();
@@ -44,7 +45,12 @@ function actualizarFlechas() {
 
 async function pintar() {
   const cont = el('#lista-viajes');
-  el('#mes-actual').textContent = nombreMes(mes);
+  const titulo = el('#mes-actual');
+  titulo.textContent = nombreMes(mes);
+  // Reinicia la animación de fundido: el nodo no se recrea, solo su texto.
+  titulo.style.animation = 'none';
+  void titulo.offsetWidth;
+  titulo.style.animation = '';
   actualizarFlechas();
 
   cont.innerHTML = '<div class="et-esqueleto pub-esqueleto"></div>'.repeat(3);
@@ -62,15 +68,19 @@ async function pintar() {
 
   if (!viajes.length) {
     cont.innerHTML = `
-      <div class="et-vacio">
-        <div class="et-vacio__emoji">🏝️</div>
+      <div class="et-vacio et-fundido">
+        <div class="et-vacio__icono">${icono('mapa', { tam: 34 })}</div>
         <p>${esc(BRAND.textos.sinViajes)}</p>
       </div>`;
     return;
   }
 
   cont.innerHTML = '';
-  for (const viaje of viajes) cont.append(tarjeta(viaje));
+  viajes.forEach((viaje, i) => {
+    const nodo = tarjeta(viaje);
+    nodo.style.setProperty('--i', i);   // entrada escalonada
+    cont.append(nodo);
+  });
 }
 
 function tarjeta(viaje) {
@@ -80,16 +90,17 @@ function tarjeta(viaje) {
   const dias = duracionEnDias(viaje.fechaInicio, viaje.fechaFin);
 
   const boton = crear('button', {
-    class: 'pub-viaje',
+    class: 'pub-viaje et-entra',
     type: 'button',
     'aria-label': `Ver ${viaje.destino}`,
   });
 
-  const medio = urlImagenValida(viaje.fotoUrl)
+  // El degradado siempre está debajo; la foto se pinta encima y, si falla,
+  // basta con quitarla para que se vea el degradado.
+  const medio = '<div class="pub-viaje__sinfoto"></div>' + (urlImagenValida(viaje.fotoUrl)
     ? `<img class="pub-viaje__foto" src="${esc(viaje.fotoUrl)}" alt="${esc(viaje.destino)}"
-            loading="lazy" onerror="this.replaceWith(Object.assign(document.createElement('div'),
-            {className:'pub-viaje__sinfoto', textContent:'🏝️'}))">`
-    : '<div class="pub-viaje__sinfoto">🏝️</div>';
+            loading="lazy" onerror="this.remove()">`
+    : '');
 
   boton.innerHTML = `
     <div class="pub-viaje__medio">
