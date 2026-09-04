@@ -32,10 +32,10 @@ export const BRAND = {
 
   // --- Contacto ------------------------------------------------------------
   // Teléfono en formato internacional SIN "+" ni espacios (requisito de wa.me).
-  whatsapp: '584140000000',
-  whatsappVisible: '+58 414-000 0000',
+  whatsapp: '584246256385',
+  whatsappVisible: '+58 424-625 6385',
   instagram: 'escapetoursmcbo',
-  email: 'escapetoursmcbo@gmail.com',
+  email: 'escapetourmcbo@gmail.com',
   ciudad: 'Maracaibo, Venezuela',
 
   // --- Paleta "sol y playa" ------------------------------------------------
@@ -50,6 +50,16 @@ export const BRAND = {
     coral: '#F2603C',          // alertas y estados críticos
   },
 
+  // --- Cómo se le habla al cliente -----------------------------------------
+  // Escape Tours Mcbo llama "Mochilero" a sus clientes. Los textos de abajo
+  // usan los marcadores {tratamiento} y {tratamientoPlural}, que se sustituyen
+  // en tiempo de ejecución (ver la función `texto`). Si algún día cambia el
+  // apelativo, basta con editarlo aquí.
+  publico: {
+    tratamiento: 'Mochilero',
+    tratamientoPlural: 'Mochileros',
+  },
+
   // --- Tipografía ----------------------------------------------------------
   // IMPORTANTE: si cambias las familias, actualiza también el <link> de Google Fonts que
   // hay en index.html, admin.html, 404.html y seed/index.html; de lo contrario
@@ -62,23 +72,27 @@ export const BRAND = {
   // --- Textos de la interfaz pública ---------------------------------------
   textos: {
     heroTitulo: 'Próximos viajes',
-    heroSubtitulo: 'Escoge tu destino, aparta tu cupo y nosotros nos encargamos del resto.',
+    heroSubtitulo:
+      'Escoge tu destino, {tratamiento}: apartas tu cupo y nosotros nos ' +
+      'encargamos del resto.',
     ctaReservar: 'Reservar mi cupo',
     ctaListaEspera: 'Anotarme en lista de espera',
     etiquetaAgotado: 'Agotado',
     sinViajes:
-      'Todavía no hay viajes publicados para este mes. Escríbenos por WhatsApp ' +
-      'y te avisamos apenas salga el próximo destino.',
+      'Todavía no hay viajes publicados para este mes. Escríbenos por WhatsApp, ' +
+      '{tratamiento}, y te avisamos apenas salga el próximo destino.',
 
     // Pantalla de confirmación tras crear la reserva
-    reservaTitulo: '¡Reserva registrada!',
+    reservaTitulo: '¡Listo, {tratamiento}!',
     reservaMensaje:
       'Tu cupo queda apartado como PENDIENTE hasta que verifiquemos el pago. ' +
       'Envíanos el comprobante por WhatsApp y te confirmamos de una vez.',
+    reservaNota:
+      'Reservar no cobra nada todavía. Confirmamos tu cupo cuando verifiquemos el pago.',
     listaEsperaTitulo: 'Quedaste en lista de espera',
     listaEsperaMensaje:
-      'Este viaje ya está lleno, pero te anotamos de primero: si alguien cancela, ' +
-      'te contactamos inmediatamente por WhatsApp.',
+      'Este viaje ya está lleno, pero te anotamos de primero, {tratamiento}: ' +
+      'si alguien cancela, te contactamos inmediatamente por WhatsApp.',
   },
 
   // --- Reglas de negocio por defecto ---------------------------------------
@@ -123,6 +137,18 @@ export function logoHtml(alto = 36) {
                  style="height:${alto}px; width:auto">`;
   }
   return BRAND.logoSvg;
+}
+
+/**
+ * Devuelve un texto de BRAND.textos con los marcadores ya sustituidos.
+ * Acepta también un texto suelto, para reutilizar los marcadores fuera de
+ * BRAND.textos (por ejemplo en los mensajes de WhatsApp del panel).
+ */
+export function texto(claveOTexto) {
+  const bruto = BRAND.textos[claveOTexto] ?? claveOTexto ?? '';
+  return String(bruto)
+    .replaceAll('{tratamiento}', BRAND.publico.tratamiento)
+    .replaceAll('{tratamientoPlural}', BRAND.publico.tratamientoPlural);
 }
 
 /** Arma un enlace wa.me con el mensaje ya redactado. */

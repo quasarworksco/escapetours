@@ -7,7 +7,7 @@ import {
 import { viajesDelMes, mesesConViajes, cuposDisponibles, estaLleno } from '../modelo/trips.js';
 import { mensajeDeError } from '../modelo/errores.js';
 import { icono } from '../utils/iconos.js';
-import { BRAND } from '../../config/brand.js';
+import { BRAND, texto } from '../../config/brand.js';
 
 let mes = mesActual();
 let mesesDisponibles = [];
@@ -70,7 +70,7 @@ async function pintar() {
     cont.innerHTML = `
       <div class="et-vacio et-fundido">
         <div class="et-vacio__icono">${icono('mapa', { tam: 34 })}</div>
-        <p>${esc(BRAND.textos.sinViajes)}</p>
+        <p>${esc(texto('sinViajes'))}</p>
       </div>`;
     return;
   }
@@ -108,7 +108,7 @@ function tarjeta(viaje) {
       <div class="pub-viaje__cintas">
         <span class="pub-viaje__cinta">${esc(rangoCorto(viaje.fechaInicio, viaje.fechaFin))}</span>
         ${lleno
-          ? `<span class="et-chip et-chip--error">${esc(BRAND.textos.etiquetaAgotado)}</span>`
+          ? `<span class="et-chip et-chip--error">${esc(texto('etiquetaAgotado'))}</span>`
           : pocos
             ? '<span class="et-chip et-chip--sol">¡Últimos cupos!</span>'
             : ''}

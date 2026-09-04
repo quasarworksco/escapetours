@@ -212,7 +212,7 @@ function mensajeParaCliente(reserva, viaje) {
   const nombre = reserva.nombreCliente.split(' ')[0];
   if (reserva.estado === 'confirmada') {
     return `Hola ${nombre}, tu cupo para ${reserva.tripDestino} está CONFIRMADO. ` +
-      'Cualquier duda nos escribes por aquí.';
+      `Cualquier duda nos escribes por aquí. ¡Nos vemos, ${BRAND.publico.tratamiento}!`;
   }
   const total = viaje ? ` El total son ${precio((viaje.precio || 0) * reserva.cantidadPersonas)}.` : '';
   return `Hola ${nombre}, te escribimos de ${BRAND.nombre} por tu reserva de ` +

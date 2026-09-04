@@ -5,7 +5,7 @@
  *   #/viaje/<id>       → detalle del viaje (enlace compartible por WhatsApp)
  */
 import { el, mostrar } from '../utils/dom.js';
-import { BRAND, aplicarTemaDeMarca, linkWhatsApp, logoHtml } from '../../config/brand.js';
+import { BRAND, aplicarTemaDeMarca, linkWhatsApp, logoHtml, texto } from '../../config/brand.js';
 import { icono } from '../utils/iconos.js';
 import { FIREBASE_SIN_CONFIGURAR } from '../firebase.js';
 import { initCalendario } from './calendario.js';
@@ -20,7 +20,7 @@ let ultimaReserva = null;
 
 function aplicarMarca() {
   aplicarTemaDeMarca();
-  document.title = `${BRAND.nombre} · ${BRAND.textos.heroTitulo}`;
+  document.title = `${BRAND.nombre} · ${texto('heroTitulo')}`;
   el('#og-title').content = document.title;
   el('#og-desc').content = BRAND.descripcion;
 
@@ -30,8 +30,8 @@ function aplicarMarca() {
   el('#mes-siguiente').innerHTML = icono('chevronDer', { tam: 22 });
   el('#marca-nombre').textContent = BRAND.nombre;
   el('#marca-eslogan').textContent = BRAND.eslogan;
-  el('#hero-titulo').textContent = BRAND.textos.heroTitulo;
-  el('#hero-subtitulo').textContent = BRAND.textos.heroSubtitulo;
+  el('#hero-titulo').textContent = texto('heroTitulo');
+  el('#hero-subtitulo').textContent = texto('heroSubtitulo');
   el('#footer-nombre').textContent = BRAND.nombre;
   el('#footer-ciudad').textContent = BRAND.ciudad;
 

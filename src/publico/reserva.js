@@ -6,7 +6,7 @@ import { cuposDisponibles, estaLleno } from '../modelo/trips.js';
 import { crearReserva } from '../modelo/bookings.js';
 import { obtenerConfig, metodosActivos } from '../modelo/config.js';
 import { mensajeDeError } from '../modelo/errores.js';
-import { BRAND, linkWhatsApp } from '../../config/brand.js';
+import { BRAND, linkWhatsApp, texto } from '../../config/brand.js';
 import { icono, iconoExito } from '../utils/iconos.js';
 
 // ---------------------------------------------------------------------------
@@ -122,8 +122,8 @@ export async function renderConfirmacion({ viaje, datos, esListaEspera }) {
       <div class="pub-confirmacion__icono">
         ${esListaEspera ? icono('lista', { tam: 60, clase: 'et-icono--espera' }) : iconoExito()}
       </div>
-      <h1 class="et-entra" style="--i:1">${esc(esListaEspera ? BRAND.textos.listaEsperaTitulo : BRAND.textos.reservaTitulo)}</h1>
-      <p>${esc(esListaEspera ? BRAND.textos.listaEsperaMensaje : BRAND.textos.reservaMensaje)}</p>
+      <h1 class="et-entra" style="--i:1">${esc(texto(esListaEspera ? 'listaEsperaTitulo' : 'reservaTitulo'))}</h1>
+      <p>${esc(texto(esListaEspera ? 'listaEsperaMensaje' : 'reservaMensaje'))}</p>
 
       <div class="pub-confirmacion__caja et-entra" style="--i:2">
         <h2 style="font-size:var(--et-txt-lg)">Tu reserva</h2>

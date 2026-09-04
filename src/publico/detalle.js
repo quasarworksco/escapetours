@@ -4,7 +4,7 @@ import { esc, precio, urlImagenValida } from '../utils/formato.js';
 import { rangoFechas, duracionEnDias, yaPaso } from '../utils/fecha.js';
 import { obtenerViaje, cuposDisponibles, estaLleno } from '../modelo/trips.js';
 import { mensajeDeError } from '../modelo/errores.js';
-import { BRAND } from '../../config/brand.js';
+import { BRAND, texto } from '../../config/brand.js';
 import { montarFormulario } from './reserva.js';
 import { icono } from '../utils/iconos.js';
 
@@ -29,8 +29,8 @@ export async function renderDetalle(tripId, { onVolver, onReservado }) {
       <div class="et-contenedor">
         <a class="pub-detalle__volver" href="#/">${icono('flechaIzq', { tam: 17, clase: 'et-icono--desliza-izq' })} Volver a los viajes</a>
         <div class="et-aviso et-aviso--alerta">
-          Este viaje ya no está disponible. Escríbenos por WhatsApp y te contamos
-          cuál es el próximo destino.
+          Este viaje ya no está disponible. Escríbenos por WhatsApp, ${esc(BRAND.publico.tratamiento)},
+          y te contamos cuál es el próximo destino.
         </div>
       </div>`;
     return;
@@ -94,7 +94,7 @@ export async function renderDetalle(tripId, { onVolver, onReservado }) {
               </span>
               <span class="et-chip ${lleno ? 'et-chip--error' : pocos ? 'et-chip--sol' : 'et-chip--mar'}">
                 ${lleno
-                  ? esc(BRAND.textos.etiquetaAgotado)
+                  ? esc(texto('etiquetaAgotado'))
                   : `${disponibles} de ${viaje.cupoMaximo} disponibles`}
               </span>
             </div>
@@ -151,11 +151,11 @@ export async function renderDetalle(tripId, { onVolver, onReservado }) {
               <p class="et-aviso et-aviso--error" id="r-error" hidden></p>
 
               <button class="et-btn et-btn--sol et-btn--bloque" type="submit" id="btn-reservar">
-                ${lleno ? esc(BRAND.textos.ctaListaEspera) : esc(BRAND.textos.ctaReservar)}
+                ${lleno ? esc(texto('ctaListaEspera')) : esc(texto('ctaReservar'))}
               </button>
 
               <p class="et-ayuda" style="text-align:center; margin-top:.75rem">
-                Reservar no cobra nada todavía. Confirmamos tu cupo cuando verifiquemos el pago.
+                ${esc(texto('reservaNota'))}
               </p>
             </form>
           </div>

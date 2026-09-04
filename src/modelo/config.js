@@ -13,9 +13,9 @@ const refConfig = () => doc(db, COL.config, 'app');
 export const CONFIG_POR_DEFECTO = {
   // Lista editable desde el panel. `detalle` es lo que ve el cliente.
   metodosPago: [
-    { nombre: 'Pago móvil', detalle: 'Banesco · C.I. V-00.000.000 · 0414-000 0000', activo: true },
-    { nombre: 'Zelle', detalle: 'escapetoursmcbo@gmail.com — Escape Tours', activo: true },
-    { nombre: 'Binance', detalle: 'escapetoursmcbo@gmail.com', activo: true },
+    { nombre: 'Pago móvil', detalle: 'Banco · C.I. V-00.000.000 · 0424-625 6385', activo: true },
+    { nombre: 'Zelle', detalle: 'escapetourmcbo@gmail.com — Escape Tours', activo: true },
+    { nombre: 'Binance', detalle: 'escapetourmcbo@gmail.com', activo: true },
     { nombre: 'Transferencia', detalle: 'Banesco · Cta. 0134-0000-00-0000000000', activo: true },
     { nombre: 'Efectivo', detalle: 'Coordinado por WhatsApp', activo: true },
   ],
