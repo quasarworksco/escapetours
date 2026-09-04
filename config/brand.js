@@ -50,6 +50,18 @@ export const BRAND = {
     coral: '#F2603C',          // alertas y estados críticos
   },
 
+  // --- Acceso al panel ------------------------------------------------------
+  // El panel pide "usuario", no un correo. Firebase Authentication exige
+  // formato de correo, así que al usuario escrito se le añade este dominio:
+  //     admin  ->  admin@escapetourmcbo.com
+  // Ese es el correo con el que hay que crear la cuenta en la consola de
+  // Firebase. La CONTRASEÑA no vive aquí ni en ningún archivo del proyecto:
+  // se guarda en Firebase y se cambia desde la consola, sin tocar el código.
+  acceso: {
+    usuarioSugerido: 'admin',
+    dominioInterno: 'escapetourmcbo.com',
+  },
+
   // --- Cómo se le habla al cliente -----------------------------------------
   // Escape Tours Mcbo llama "Mochilero" a sus clientes. Los textos de abajo
   // usan los marcadores {tratamiento} y {tratamientoPlural}, que se sustituyen
@@ -149,6 +161,15 @@ export function texto(claveOTexto) {
   return String(bruto)
     .replaceAll('{tratamiento}', BRAND.publico.tratamiento)
     .replaceAll('{tratamientoPlural}', BRAND.publico.tratamientoPlural);
+}
+
+/**
+ * Convierte lo que el admin escribe en el campo "usuario" en el correo que
+ * espera Firebase. Si ya escribió un correo completo, se respeta tal cual.
+ */
+export function usuarioACorreo(usuario) {
+  const limpio = String(usuario || '').trim().toLowerCase();
+  return limpio.includes('@') ? limpio : `${limpio}@${BRAND.acceso.dominioInterno}`;
 }
 
 /** Arma un enlace wa.me con el mensaje ya redactado. */

@@ -29,10 +29,10 @@ export function mensajeDeError(err) {
     'aborted':
       'Otra persona modificó este viaje al mismo tiempo. Vuelve a intentarlo.',
     'failed-precondition': 'La operación no se pudo completar. Recarga la página.',
-    'auth/invalid-credential': 'Correo o contraseña incorrectos.',
-    'auth/invalid-email': 'El correo no tiene un formato válido.',
-    'auth/user-not-found': 'Correo o contraseña incorrectos.',
-    'auth/wrong-password': 'Correo o contraseña incorrectos.',
+    'auth/invalid-credential': 'Usuario o contraseña incorrectos.',
+    'auth/invalid-email': 'El usuario no tiene un formato válido.',
+    'auth/user-not-found': 'Usuario o contraseña incorrectos.',
+    'auth/wrong-password': 'Usuario o contraseña incorrectos.',
     'auth/too-many-requests':
       'Demasiados intentos fallidos. Espera unos minutos e inténtalo otra vez.',
     'auth/network-request-failed': 'Falló la conexión. Revisa tu internet.',

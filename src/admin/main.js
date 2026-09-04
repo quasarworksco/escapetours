@@ -68,10 +68,10 @@ async function alEnviarLogin(evento) {
   const boton = el('#btn-login');
   error.hidden = true;
 
-  const email = el('#login-email').value.trim();
+  const usuario = el('#login-usuario').value.trim();
   const password = el('#login-password').value;
-  if (!email || !password) {
-    error.textContent = 'Escribe tu correo y tu contraseña.';
+  if (!usuario || !password) {
+    error.textContent = 'Escribe tu usuario y tu contraseña.';
     error.hidden = false;
     return;
   }
@@ -79,7 +79,7 @@ async function alEnviarLogin(evento) {
   boton.disabled = true;
   boton.textContent = 'Entrando…';
   try {
-    await iniciarSesion(email, password);
+    await iniciarSesion(usuario, password);
     el('#login-password').value = '';
     // observarSesion se encarga de mostrar el panel.
   } catch (err) {
@@ -96,9 +96,12 @@ async function alEnviarLogin(evento) {
 // ---------------------------------------------------------------------------
 
 function iniciarPanel(admin) {
+  // Se muestra solo la parte antes de la arroba: el dominio interno es un
+  // detalle técnico que al usuario del panel no le dice nada.
+  const usuarioVisible = String(admin.email || '').split('@')[0];
   el('#header-usuario').textContent = admin.nombre
-    ? `${admin.nombre} · ${admin.email}`
-    : admin.email;
+    ? `${admin.nombre} · ${usuarioVisible}`
+    : usuarioVisible;
 
   if (!panelIniciado) {
     panelIniciado = true;
@@ -132,7 +135,7 @@ function main() {
     const error = el('#login-error');
     error.innerHTML =
       'Falta conectar el proyecto de Firebase: edita <code>config/firebase.js</code> ' +
-      'siguiendo el paso 2 de DEPLOY.md.';
+      'siguiendo DEPLOY.md.';
     error.hidden = false;
     return;
   }

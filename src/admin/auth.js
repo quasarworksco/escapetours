@@ -19,6 +19,7 @@ import {
 } from 'https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js';
 import { auth, db, COL } from '../firebase.js';
 import { ErrorApp } from '../modelo/errores.js';
+import { usuarioACorreo } from '../../config/brand.js';
 
 /** Datos del admin en sesión, o null. */
 export let adminActual = null;
@@ -29,15 +30,18 @@ async function cargarPerfilAdmin(user) {
   return { uid: user.uid, email: user.email, ...snap.data() };
 }
 
-export async function iniciarSesion(email, password) {
+/**
+ * @param {string} usuario  "admin" o un correo completo (ver usuarioACorreo)
+ */
+export async function iniciarSesion(usuario, password) {
   await setPersistence(auth, browserLocalPersistence);
-  const cred = await signInWithEmailAndPassword(auth, email.trim(), password);
+  const cred = await signInWithEmailAndPassword(auth, usuarioACorreo(usuario), password);
   const perfil = await cargarPerfilAdmin(cred.user);
   if (!perfil) {
     await signOut(auth);
     throw new ErrorApp(
       'Esta cuenta existe pero no tiene permisos de administrador. ' +
-        'Pídele al dueño que agregue tu UID a la colección "admins".'
+        'Falta crear su documento en la colección "admins" (paso 6 de DEPLOY.md).'
     );
   }
   adminActual = perfil;

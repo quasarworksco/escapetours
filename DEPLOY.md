@@ -25,40 +25,46 @@ No hace falta instalar Node, ni compilar, ni pagar hosting.
 1. Menú izquierdo → **Compilación → Authentication** → *Comenzar*.
 2. Pestaña **Sign-in method** → habilita **Correo electrónico/contraseña**
    (solo la primera opción; el "vínculo por correo" déjalo apagado).
-3. Pestaña **Users** → **Agregar usuario** → escribe tu correo y una contraseña
-   segura. Este será el login del panel.
+3. Pestaña **Users** → **Agregar usuario**:
+
+   | Campo | Valor |
+   |---|---|
+   | Correo electrónico | `admin@escapetourmcbo.com` |
+   | Contraseña | la que quieras usar |
+
+   **El panel no pide correo, pide usuario.** Quien entre escribirá solo
+   `admin`; el código le añade `@escapetourmcbo.com` por detrás. Ese dominio es
+   interno: no existe como buzón real y no hace falta que exista. Si algún día
+   quieres cambiar el nombre de usuario, edita `BRAND.acceso` en
+   `config/brand.js` y crea el usuario equivalente aquí.
+
+   La contraseña **no está en el código**: vive en Firebase. Para cambiarla,
+   Authentication → Users → los tres puntos → *Restablecer contraseña*. No hay
+   que tocar ni volver a publicar el sitio.
+
 4. Copia el **UID** que aparece en la tabla (una cadena tipo `A1b2C3d4...`).
    Lo necesitas en el paso 4.
 
-### 1.3 Registrar la app web y copiar las credenciales
+### 1.3 La app web ya está registrada
 
-1. En **Configuración del proyecto** → sección *Tus apps* → icono **`</>`** (Web).
-2. Apodo: `Escape Tours Web`. **No** marques Firebase Hosting.
-3. Firebase te muestra un bloque `firebaseConfig`. Copia esos valores.
+El proyecto `escapetours-235be` ya está conectado: sus credenciales están en
+`config/firebase.js`.
+
+> **¿Es peligroso que esas credenciales estén en GitHub?** No. La configuración
+> web de Firebase es pública por diseño y viaja en el HTML de cualquier sitio que
+> use Firebase. No es una contraseña: solo dice *a qué proyecto conectarse*. Lo
+> que protege los datos son las reglas de seguridad del paso 3.
 
 ---
 
-## Paso 2 — Conectar el código
+## Paso 2 — Datos de la agencia
 
-Abre `config/firebase.js` y reemplaza los valores de ejemplo por los tuyos:
+`config/brand.js` ya tiene el WhatsApp y el correo de Escape Tours Mcbo. Revisa
+el usuario de Instagram y el apelativo con el que se trata a los clientes
+(`BRAND.publico.tratamiento`, hoy "Mochilero").
 
-```js
-export const FIREBASE_CONFIG = {
-  apiKey: 'AIzaSy...',
-  authDomain: 'escape-tours-mcbo.firebaseapp.com',
-  projectId: 'escape-tours-mcbo',
-  storageBucket: 'escape-tours-mcbo.appspot.com',
-  messagingSenderId: '123456789012',
-  appId: '1:123456789012:web:abc123',
-};
-```
-
-> **¿Es peligroso subir esto a GitHub?** No. La configuración web de Firebase es
-> pública por diseño y viaja en el HTML de cualquier sitio que use Firebase. No
-> es una contraseña: solo dice *a qué proyecto conectarse*. Lo que protege los
-> datos son las reglas de seguridad del paso 3.
-
-Luego abre `config/brand.js` y ajusta tu número de WhatsApp, Instagram y correo.
+Los **datos bancarios** no van en el código: se cargan desde el panel, en la
+pestaña **Datos de pago**.
 
 ---
 
@@ -193,8 +199,8 @@ repositorios públicos.
 
 | Síntoma | Causa y solución |
 |---|---|
+| `Usuario o contraseña incorrectos` con la contraseña correcta | El usuario en Firebase debe ser `admin@escapetourmcbo.com`, no `admin` a secas (paso 1.2). |
 | `Missing or insufficient permissions` en el panel | Falta tu documento en `/admins` (paso 4), o el ID del documento no es tu UID. |
 | El login dice `auth/unauthorized-domain` | Agrega el dominio en Authentication → Settings → Dominios autorizados (pasos 5 y 6). |
 | Pantalla en blanco y errores CORS en la consola | Abriste el archivo con `file://`. Usa un servidor local (paso 5). |
-| Advertencia `config/firebase.js todavía tiene valores de ejemplo` | Falta el paso 2. |
 | El sitio no cambia después del push | GitHub Pages tarda 1–2 min. Prueba recargar con `Ctrl+Shift+R`. |

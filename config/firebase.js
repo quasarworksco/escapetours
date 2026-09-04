@@ -16,12 +16,12 @@
  */
 
 export const FIREBASE_CONFIG = {
-  apiKey: 'REEMPLAZAR_API_KEY',
-  authDomain: 'REEMPLAZAR.firebaseapp.com',
-  projectId: 'REEMPLAZAR_PROJECT_ID',
-  storageBucket: 'REEMPLAZAR.appspot.com',
-  messagingSenderId: 'REEMPLAZAR_SENDER_ID',
-  appId: 'REEMPLAZAR_APP_ID',
+  apiKey: 'AIzaSyB_G9fxWs816qN5GXzHTr7tbQ0vmqhW9gU',
+  authDomain: 'escapetours-235be.firebaseapp.com',
+  projectId: 'escapetours-235be',
+  storageBucket: 'escapetours-235be.firebasestorage.app',
+  messagingSenderId: '519597757371',
+  appId: '1:519597757371:web:25269c1d78870bca15ea9e',
 };
 
 /** true cuando el archivo todavía tiene los valores de ejemplo. */
