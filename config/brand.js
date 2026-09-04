@@ -50,6 +50,12 @@ export const BRAND = {
     coral: '#F2603C',          // alertas y estados críticos
   },
 
+  // --- Crédito del desarrollador --------------------------------------------
+  creditos: {
+    nombre: 'DGP GROUP USA',
+    url: null,   // si algún día hay web, se pone aquí y el nombre se enlaza
+  },
+
   // --- Sitio ----------------------------------------------------------------
   // Dirección pública, usada para las etiquetas que leen WhatsApp, Facebook,
   // Instagram y X al compartir el enlace. Tiene que ser absoluta y terminar
@@ -113,6 +119,21 @@ export const BRAND = {
       'Todavía no hay viajes publicados para este mes. Escríbenos por WhatsApp, ' +
       '{tratamiento}, y te avisamos apenas salga el próximo destino.',
 
+    // Cierre de la página pública
+    cierreTitulo: '¿Nos vamos de viaje?',
+    cierreTexto:
+      'Escríbenos y te ayudamos a escoger tu próximo destino. Te respondemos ' +
+      'rápido, {tratamiento}.',
+    cierreBoton: 'Escríbenos por WhatsApp',
+
+    // Cómo funciona
+    pasosTitulo: 'Reservar es así de fácil',
+    pasos: [
+      ['Escoge tu viaje', 'Mira los destinos del mes, las fechas y cuántos cupos quedan.'],
+      ['Aparta tu cupo', 'Llenas tus datos en un minuto. No pagas nada todavía.'],
+      ['Confirmamos por WhatsApp', 'Coordinamos el pago y te confirmamos el cupo. Listo.'],
+    ],
+
     // Pantalla de confirmación tras crear la reserva
     reservaTitulo: '¡Listo, {tratamiento}!',
     reservaMensaje:
@@ -124,6 +145,40 @@ export const BRAND = {
     listaEsperaMensaje:
       'Este viaje ya está lleno, pero te anotamos de primero, {tratamiento}: ' +
       'si alguien cancela, te contactamos inmediatamente por WhatsApp.',
+  },
+
+  // --- Sugerencias del panel ------------------------------------------------
+  // Etiquetas que aparecen bajo los campos del formulario de viaje: al pulsar
+  // una, se añade esa línea al campo. Están pensadas para no tener que escribir
+  // siempre lo mismo. Añade o quita las que uses de verdad.
+  sugerencias: {
+    incluye: [
+      'Transporte ida y vuelta',
+      'Refrigerio',
+      'Hidratación',
+      'Desayuno',
+      'Almuerzo',
+      'Cena',
+      'Posada con desayuno',
+      'Guía acompañante',
+      'Toldo y sillas',
+      'Paseo en peñero',
+      'Entrada al parque',
+      'Impuestos del Parque Nacional',
+      'Fotografías del viaje',
+      'Seguro de viaje',
+      'Música y cornetas',
+    ],
+    // Puntos de salida habituales en Maracaibo. El panel suma automáticamente
+    // los que ya hayas usado en otros viajes.
+    puntosEncuentro: [
+      'C.C. Lago Mall',
+      'C.C. Sambil Maracaibo',
+      'Plaza de la República',
+      'Redoma de Delicias',
+      'Aeropuerto La Chinita',
+      'Terminal de Pasajeros',
+    ],
   },
 
   // --- Reglas de negocio por defecto ---------------------------------------

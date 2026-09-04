@@ -38,10 +38,38 @@ function aplicarMarca() {
   el('#hero-subtitulo').textContent = texto('heroSubtitulo');
   el('#footer-nombre').textContent = BRAND.nombre;
   el('#footer-ciudad').textContent = BRAND.ciudad;
+  el('#footer-logo').innerHTML = logoHtml(40);
+  el('#footer-copy').textContent = `© ${new Date().getFullYear()} ${BRAND.nombre}`;
 
-  el('#btn-wa-header').href = linkWhatsApp(
-    `¡Hola ${BRAND.nombre}! Quiero información sobre los próximos viajes.`
+  const credito = BRAND.creditos?.nombre;
+  el('#footer-creditos').innerHTML = credito
+    ? `Desarrollado por ${BRAND.creditos.url
+        ? `<a href="${BRAND.creditos.url}" target="_blank" rel="noopener">${credito}</a>`
+        : `<strong>${credito}</strong>`}`
+    : '';
+
+  // Cierre de la página
+  el('#cierre-titulo').textContent = texto('cierreTitulo');
+  el('#cierre-texto').textContent = texto('cierreTexto');
+  el('#btn-wa-pie-texto').textContent = texto('cierreBoton');
+  el('#btn-wa-pie-icono').innerHTML = icono('whatsapp', { tam: 18 });
+
+  // Cómo funciona
+  el('#pasos-titulo').textContent = texto('pasosTitulo');
+  el('#pasos-lista').innerHTML = (BRAND.textos.pasos || [])
+    .map(([titulo, detalle], i) => `
+      <li class="pub-paso et-revela" style="--i:${i}">
+        <span class="pub-paso__numero">${i + 1}</span>
+        <h3>${titulo}</h3>
+        <p>${detalle}</p>
+      </li>`)
+    .join('');
+
+  const consulta = linkWhatsApp(
+    `Hola ${BRAND.nombre}, quiero información sobre los próximos viajes.`
   );
+  el('#btn-wa-header').href = consulta;
+  el('#btn-wa-pie').href = consulta;
 
   const enlaces = el('#footer-enlaces');
   enlaces.innerHTML = '';
@@ -87,7 +115,7 @@ function pintarDatosDePortada(viajes) {
 
   const datos = [
     [proximos.length, proximos.length === 1 ? 'viaje abierto' : 'viajes abiertos'],
-    [precio(desde), 'por persona, desde'],
+    [`Desde ${precio(desde)}`, 'por persona'],
     [cupos, cupos === 1 ? 'cupo disponible' : 'cupos disponibles'],
   ];
 
@@ -169,6 +197,7 @@ async function main() {
 
   await initCalendario({ onVerViaje: (id) => { location.hash = `#/viaje/${id}`; } });
   await enrutar();
+  revelarAlEntrar(document.querySelectorAll('.pub-pasos .et-revela'));
 
   // Los viajes ya están en memoria: no cuesta ninguna lectura extra.
   try {

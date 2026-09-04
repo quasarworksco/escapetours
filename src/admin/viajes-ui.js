@@ -4,7 +4,7 @@ import { esc, precio, urlImagenValida, pluralizar } from '../utils/formato.js';
 import { rangoFechas, hoyISO, yaPaso, duracionEnDias } from '../utils/fecha.js';
 import {
   crearViaje, actualizarViaje, eliminarViaje, recalcularCupos,
-  cuposDisponibles, estaLleno, ocupacion,
+  cuposDisponibles, estaLleno, ocupacion, puntosDeEncuentro,
 } from '../modelo/trips.js';
 import { resumirReservas } from '../modelo/bookings.js';
 import { mensajeDeError } from '../modelo/errores.js';
@@ -181,6 +181,69 @@ async function alEliminar(viaje, resumen) {
 
 const campo = (id) => el(`#viaje-${id}`);
 
+/** Las líneas no vacías de un textarea, en minúsculas, para comparar. */
+function lineasDe(textarea) {
+  return textarea.value.split('\n').map((l) => l.trim()).filter(Boolean);
+}
+
+/**
+ * Pinta las etiquetas de sugerencia bajo un campo. Al pulsar una se añade esa
+ * línea al textarea; si ya estaba, se quita. La etiqueta refleja el estado.
+ */
+const sincronizadores = new WeakMap();
+
+function montarSugerencias(contenedor, textarea, opciones) {
+  contenedor.innerHTML = '';
+  if (!opciones.length) return;
+
+  const sincronizar = () => {
+    const puestas = new Set(lineasDe(textarea).map((l) => l.toLowerCase()));
+    for (const chip of contenedor.children) {
+      chip.classList.toggle('admin-sugerencia--puesta', puestas.has(chip.dataset.valor.toLowerCase()));
+    }
+  };
+
+  for (const opcion of opciones) {
+    const chip = crear('button', {
+      class: 'admin-sugerencia',
+      type: 'button',
+      text: opcion,
+      'data-valor': opcion,
+      onclick: () => {
+        const lineas = lineasDe(textarea);
+        const i = lineas.findIndex((l) => l.toLowerCase() === opcion.toLowerCase());
+        if (i >= 0) lineas.splice(i, 1);
+        else lineas.push(opcion);
+        textarea.value = lineas.join('\n');
+        sincronizar();
+        textarea.focus();
+      },
+    });
+    contenedor.append(chip);
+  }
+
+  // El textarea vive en el DOM entre aperturas del modal: el listener se
+  // engancha una sola vez y siempre llama al sincronizador vigente.
+  sincronizadores.set(textarea, sincronizar);
+  if (!textarea.dataset.ligado) {
+    textarea.dataset.ligado = '1';
+    textarea.addEventListener('input', () => sincronizadores.get(textarea)?.());
+  }
+  sincronizar();
+}
+
+/** A las sugerencias fijas se suman los puntos ya usados en otros viajes. */
+function puntosSugeridos() {
+  const usados = estado.viajes.flatMap(puntosDeEncuentro);
+  const vistos = new Set();
+  return [...BRAND.sugerencias.puntosEncuentro, ...usados].filter((p) => {
+    const clave = p.trim().toLowerCase();
+    if (!clave || vistos.has(clave)) return false;
+    vistos.add(clave);
+    return true;
+  });
+}
+
 export function abrirModalViaje(viaje = null) {
   viajeEnEdicion = viaje;
   const modal = el('#modal-viaje');
@@ -198,8 +261,11 @@ export function abrirModalViaje(viaje = null) {
   campo('descripcion').value = viaje?.descripcion || '';
   campo('incluye').value = (viaje?.incluye || []).join('\n');
   campo('itinerario').value = (viaje?.itinerario || []).join('\n');
-  campo('punto').value = viaje?.puntoEncuentro || '';
+  campo('puntos').value = puntosDeEncuentro(viaje || {}).join('\n');
   campo('estado').value = viaje?.estado || 'activo';
+
+  montarSugerencias(el('#sugerencias-incluye'), campo('incluye'), BRAND.sugerencias.incluye);
+  montarSugerencias(el('#sugerencias-puntos'), campo('puntos'), puntosSugeridos());
 
   const confirmados = viaje?.cuposConfirmados || 0;
   el('#viaje-cupo-ayuda').textContent = confirmados
@@ -237,7 +303,7 @@ async function guardar(evento) {
     descripcion: campo('descripcion').value,
     incluye: campo('incluye').value.split('\n'),
     itinerario: campo('itinerario').value.split('\n'),
-    puntoEncuentro: campo('punto').value,
+    puntosEncuentro: campo('puntos').value.split('\n'),
     estado: campo('estado').value,
   };
 

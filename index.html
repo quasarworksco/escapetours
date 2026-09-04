@@ -87,6 +87,13 @@
 
       <div id="lista-viajes" class="pub-viajes"></div>
     </div>
+
+    <section class="pub-pasos">
+      <div class="et-contenedor">
+        <h2 class="pub-pasos__titulo et-revela" id="pasos-titulo">Reservar es así de fácil</h2>
+        <ol class="pub-pasos__lista" id="pasos-lista"></ol>
+      </div>
+    </section>
   </main>
 
   <!-- ===================== DETALLE DEL VIAJE ===================== -->
@@ -97,11 +104,33 @@
 
   <!-- ===================== PIE ===================== -->
   <footer class="pub-footer">
-    <div class="et-contenedor">
-      <p><strong id="footer-nombre">Escape Tours Mcbo</strong></p>
-      <p id="footer-ciudad">Maracaibo, Venezuela</p>
-      <p class="pub-footer__enlaces" id="footer-enlaces"></p>
-      <p class="pub-footer__admin"><a href="admin.html">Acceso del equipo</a></p>
+    <svg class="pub-footer__ola" viewBox="0 0 1440 110" preserveAspectRatio="none" aria-hidden="true">
+      <path d="M0,52 C220,104 420,8 700,38 C940,64 1180,4 1440,46 L1440,110 L0,110 Z"/>
+    </svg>
+
+    <div class="et-contenedor pub-footer__interior">
+      <div class="pub-footer__cta">
+        <h2 id="cierre-titulo">¿Nos vamos de viaje?</h2>
+        <p id="cierre-texto">Escríbenos y te ayudamos a escoger tu próximo destino.</p>
+        <a class="et-btn et-btn--wa" id="btn-wa-pie" href="#" target="_blank" rel="noopener">
+          <span id="btn-wa-pie-icono"></span> <span id="btn-wa-pie-texto">Escríbenos por WhatsApp</span>
+        </a>
+      </div>
+
+      <div class="pub-footer__marca">
+        <span class="pub-footer__logo" id="footer-logo"></span>
+        <strong id="footer-nombre">Escape Tours Mcbo</strong>
+        <span id="footer-ciudad">Maracaibo, Venezuela</span>
+        <div class="pub-footer__enlaces" id="footer-enlaces"></div>
+      </div>
+    </div>
+
+    <div class="pub-footer__base">
+      <div class="et-contenedor pub-footer__base-interior">
+        <span id="footer-copy">© Escape Tours Mcbo</span>
+        <span id="footer-creditos"></span>
+        <a class="pub-footer__admin" href="admin.html">Acceso del equipo</a>
+      </div>
     </div>
   </footer>
 

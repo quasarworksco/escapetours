@@ -211,6 +211,7 @@
           <label for="viaje-incluye">¿Qué incluye? (una línea por ítem)</label>
           <textarea class="et-textarea" id="viaje-incluye"
                     placeholder="Transporte ida y vuelta&#10;Posada con desayuno&#10;Tour a Cayo de Agua"></textarea>
+          <div class="admin-sugerencias" id="sugerencias-incluye"></div>
         </div>
 
         <div class="et-campo">
@@ -219,11 +220,17 @@
                     placeholder="Día 1: Salida 4:00 am desde Maracaibo&#10;Día 2: Tour por los cayos"></textarea>
         </div>
 
+        <div class="et-campo">
+          <label for="viaje-puntos">Puntos de encuentro (uno por línea)</label>
+          <textarea class="et-textarea" id="viaje-puntos"
+                    placeholder="C.C. Lago Mall, 4:00 am&#10;Plaza de la República, 4:30 am"></textarea>
+          <span class="et-ayuda">
+            Si el autobús recoge en varios sitios, ponlos en orden de recogida.
+          </span>
+          <div class="admin-sugerencias" id="sugerencias-puntos"></div>
+        </div>
+
         <div class="et-fila et-fila--2">
-          <div class="et-campo">
-            <label for="viaje-punto">Punto de encuentro</label>
-            <input class="et-input" id="viaje-punto" placeholder="C.C. Lago Mall, 4:00 am">
-          </div>
           <div class="et-campo">
             <label for="viaje-estado">Estado</label>
             <select class="et-select" id="viaje-estado">
@@ -232,6 +239,7 @@
               <option value="cancelado">Cancelado — oculto del calendario</option>
             </select>
           </div>
+          <div class="et-campo"></div>
         </div>
 
         <p class="et-aviso et-aviso--error" id="viaje-error" hidden></p>

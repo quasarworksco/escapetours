@@ -480,3 +480,39 @@
 
 /* Enlace de recalcular. */
 .admin-cupos__enlace { transition: color var(--et-transicion); }
+
+/* --- Sugerencias del formulario de viaje ----------------------------------
+   Etiquetas que se pulsan para añadir una línea al campo de arriba. */
+.admin-sugerencias {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--et-1);
+  margin-top: var(--et-2);
+}
+.admin-sugerencia {
+  appearance: none;
+  font: inherit;
+  font-size: var(--et-txt-xs);
+  font-weight: 600;
+  padding: 0.28rem 0.7rem;
+  border-radius: var(--et-radio-full);
+  border: 1px dashed var(--et-borde);
+  background: transparent;
+  color: var(--et-texto-suave);
+  cursor: pointer;
+  transition: all var(--et-transicion);
+}
+.admin-sugerencia:hover {
+  border-style: solid;
+  border-color: var(--et-turquesa-oscuro);
+  color: var(--et-turquesa-oscuro);
+  transform: translateY(-1px);
+}
+/* Ya está en el campo: se marca y al pulsarla se quita. */
+.admin-sugerencia--puesta {
+  border-style: solid;
+  border-color: var(--et-turquesa-oscuro);
+  background: var(--et-turquesa-suave);
+  color: var(--et-turquesa-oscuro);
+}
+.admin-sugerencia--puesta::before { content: '\2713\00a0'; font-weight: 700; }

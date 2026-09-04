@@ -25,7 +25,7 @@ export const VIAJES_EJEMPLO = [
     precio: 590,
     cupoMaximo: 12,
     fotoUrl: 'https://images.unsplash.com/photo-1559128010-7c1ad6e1b6a5?w=1200&q=80',
-    puntoEncuentro: 'Aeropuerto La Chinita, 5:30 am',
+    puntosEncuentro: ['Aeropuerto La Chinita, 5:30 am'],
     incluye: [
       'Vuelo ida y vuelta Maracaibo – Los Roques',
       'Posada 3 noches con desayuno',
@@ -49,7 +49,7 @@ export const VIAJES_EJEMPLO = [
     precio: 210,
     cupoMaximo: 25,
     fotoUrl: 'https://images.unsplash.com/photo-1505228395891-9a51e7e86bf6?w=1200&q=80',
-    puntoEncuentro: 'C.C. Lago Mall, 4:00 am',
+    puntosEncuentro: ['C.C. Lago Mall, 4:00 am', 'Plaza de la República, 4:30 am'],
     incluye: [
       'Transporte ida y vuelta en autobús',
       'Posada 2 noches',
@@ -72,7 +72,7 @@ export const VIAJES_EJEMPLO = [
     precio: 380,
     cupoMaximo: 20,
     fotoUrl: 'https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?w=1200&q=80',
-    puntoEncuentro: 'C.C. Lago Mall, 5:00 am',
+    puntosEncuentro: ['C.C. Lago Mall, 5:00 am', 'Redoma de Delicias, 5:20 am'],
     incluye: [
       'Transporte ida y vuelta',
       'Hotel 4 noches con desayuno',
@@ -97,7 +97,7 @@ export const VIAJES_EJEMPLO = [
     precio: 95,
     cupoMaximo: 30,
     fotoUrl: 'https://images.unsplash.com/photo-1520454974749-611b7248ffdb?w=1200&q=80',
-    puntoEncuentro: 'C.C. Lago Mall, 3:30 am',
+    puntosEncuentro: ['C.C. Lago Mall, 3:30 am', 'C.C. Sambil Maracaibo, 3:50 am'],
     incluye: [
       'Transporte ida y vuelta',
       'Peñero a los cayos',

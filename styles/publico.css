@@ -262,7 +262,13 @@ body.pub--conportada .pub-hero p { text-shadow: 0 1px 12px rgba(11, 59, 69, 0.35
   padding-bottom: var(--et-8);
 }
 @media (min-width: 700px) {
-  .pub-viajes { grid-template-columns: repeat(auto-fill, minmax(330px, 1fr)); }
+  /* Las columnas tienen ancho acotado y la rejilla se centra: con uno o dos
+     viajes las tarjetas mantienen su tamaño en vez de estirarse o dejar un
+     hueco enorme a la derecha. */
+  .pub-viajes {
+    grid-template-columns: repeat(auto-fit, minmax(320px, 360px));
+    justify-content: center;
+  }
 }
 
 .pub-viaje {
@@ -547,25 +553,6 @@ body.pub--conportada .pub-hero p { text-shadow: 0 1px 12px rgba(11, 59, 69, 0.35
 .pub-pago__nombre { font-weight: 700; white-space: nowrap; }
 .pub-pago__detalle { text-align: right; color: var(--et-texto-suave); }
 
-/* --- Pie ------------------------------------------------------------------ */
-.pub-footer {
-  background: var(--et-marino);
-  color: #CFE9E7;
-  padding-block: var(--et-6);
-  text-align: center;
-  margin-top: var(--et-7);
-}
-.pub-footer p { margin: 0 0 var(--et-1); }
-.pub-footer strong { color: var(--et-blanco); font-size: var(--et-txt-lg); }
-.pub-footer__enlaces {
-  margin-top: var(--et-4);
-  display: flex;
-  flex-wrap: wrap;
-  gap: var(--et-3) var(--et-5);
-  justify-content: center;
-}
-.pub-footer a { color: var(--et-amarillo); }
-.pub-footer__admin { margin-top: var(--et-4); font-size: var(--et-txt-xs); opacity: 0.6; }
 
 /* --- Esqueletos de carga -------------------------------------------------- */
 .pub-esqueleto { border-radius: var(--et-radio-lg); height: 340px; }
@@ -635,21 +622,6 @@ body.pub--conportada .pub-hero p { text-shadow: 0 1px 12px rgba(11, 59, 69, 0.35
   animation: et-emerger var(--et-t-lenta) var(--et-rebote) backwards;
 }
 
-/* Enlaces del pie. */
-.pub-footer__enlaces a {
-  display: inline-flex;
-  align-items: center;
-  gap: var(--et-2);
-  white-space: nowrap;
-  text-decoration: none;
-  border-bottom: 1.5px solid transparent;
-  padding-bottom: 2px;
-  transition: transform var(--et-transicion), border-color var(--et-transicion);
-}
-.pub-footer__enlaces a:hover {
-  transform: translateY(-2px);
-  border-bottom-color: currentColor;
-}
 
 
 /* --- Estado vacío ---------------------------------------------------------- */
@@ -706,3 +678,179 @@ body.pub--conportada .pub-hero p { text-shadow: 0 1px 12px rgba(11, 59, 69, 0.35
   animation: et-brillar 750ms var(--et-suave);
 }
 @keyframes et-brillar { to { left: 120%; } }
+
+/* El marcador de los puntos de encuentro usa el color de acento cálido. */
+.pub-lista__marca--lugar { color: var(--et-coral); }
+
+
+/* ==========================================================================
+   Cómo funciona
+   ========================================================================== */
+
+.pub-pasos { padding-block: var(--et-6) var(--et-8); }
+.pub-pasos__titulo {
+  text-align: center;
+  font-size: clamp(1.6rem, 6vw, 2.4rem);
+  letter-spacing: -0.03em;
+  margin-bottom: var(--et-6);
+}
+.pub-pasos__lista {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  gap: var(--et-4);
+}
+@media (min-width: 800px) {
+  .pub-pasos__lista { grid-template-columns: repeat(3, 1fr); gap: var(--et-5); }
+}
+
+.pub-paso {
+  position: relative;
+  padding: var(--et-6) var(--et-5) var(--et-5);
+  border-radius: 24px;
+  background: var(--et-vidrio-denso);
+  -webkit-backdrop-filter: blur(var(--et-desenfoque)) saturate(1.6);
+  backdrop-filter: blur(var(--et-desenfoque)) saturate(1.6);
+  border: 1px solid var(--et-vidrio-borde);
+  box-shadow: var(--et-vidrio-sombra);
+  transition: transform var(--et-t-media) var(--et-salida),
+              box-shadow var(--et-t-media) var(--et-salida);
+}
+.pub-paso.et-visible:hover { transform: translateY(-5px); box-shadow: var(--et-sombra-lg); }
+.pub-paso h3 { font-size: var(--et-txt-lg); margin-bottom: var(--et-2); }
+.pub-paso p { color: var(--et-texto-suave); font-size: var(--et-txt-sm); margin: 0; }
+
+.pub-paso__numero {
+  position: absolute;
+  top: -18px;
+  left: var(--et-5);
+  width: 44px;
+  height: 44px;
+  display: grid;
+  place-items: center;
+  border-radius: 14px;
+  font-family: var(--et-fuente-titulo);
+  font-size: var(--et-txt-xl);
+  font-weight: 800;
+  color: var(--et-marino);
+  background: linear-gradient(140deg, var(--et-amarillo), var(--et-amarillo-oscuro));
+  box-shadow: 0 8px 20px color-mix(in srgb, var(--et-amarillo) 45%, transparent);
+  transition: transform var(--et-t-media) var(--et-rebote);
+}
+.pub-paso.et-visible:hover .pub-paso__numero { transform: rotate(-8deg) scale(1.08); }
+
+/* ==========================================================================
+   Pie
+   ========================================================================== */
+
+.pub-footer {
+  position: relative;
+  margin-top: var(--et-6);
+  color: #CFE9E7;
+  background: var(--et-marino);
+}
+
+/* La ola separa el pie del resto sin una línea recta y dura. */
+.pub-footer__ola {
+  display: block;
+  width: 100%;
+  height: clamp(48px, 7vw, 88px);
+  margin-bottom: -1px;
+  position: absolute;
+  bottom: 100%;
+  left: 0;
+  fill: var(--et-marino);
+}
+
+.pub-footer__interior {
+  display: grid;
+  gap: var(--et-6);
+  padding-block: var(--et-7) var(--et-6);
+}
+@media (min-width: 820px) {
+  .pub-footer__interior {
+    grid-template-columns: 1.2fr 1fr;
+    align-items: center;
+    gap: var(--et-8);
+  }
+}
+
+.pub-footer__cta h2 {
+  color: var(--et-blanco);
+  font-size: clamp(1.8rem, 7vw, 2.6rem);
+  letter-spacing: -0.03em;
+  margin-bottom: var(--et-2);
+}
+.pub-footer__cta p {
+  font-size: var(--et-txt-lg);
+  opacity: 0.88;
+  max-width: 34ch;
+  margin-bottom: var(--et-5);
+}
+
+.pub-footer__marca {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: var(--et-2);
+  padding: var(--et-5);
+  border-radius: 22px;
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+}
+.pub-footer__logo { display: inline-flex; margin-bottom: var(--et-1); }
+.pub-footer__marca strong {
+  color: var(--et-blanco);
+  font-family: var(--et-fuente-titulo);
+  font-size: var(--et-txt-lg);
+}
+.pub-footer__marca > span { font-size: var(--et-txt-sm); opacity: 0.8; }
+
+.pub-footer__enlaces {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--et-2);
+  margin-top: var(--et-2);
+}
+.pub-footer__enlaces a {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--et-2);
+  padding: 0.5rem 0.9rem;
+  border-radius: var(--et-radio-full);
+  background: rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  color: var(--et-amarillo);
+  font-size: var(--et-txt-sm);
+  font-weight: 600;
+  text-decoration: none;
+  white-space: nowrap;
+  transition: transform var(--et-transicion), background-color var(--et-transicion);
+}
+.pub-footer__enlaces a:hover {
+  transform: translateY(-2px);
+  background: rgba(255, 255, 255, 0.16);
+  color: var(--et-blanco);
+}
+
+.pub-footer__base {
+  border-top: 1px solid rgba(255, 255, 255, 0.12);
+  padding-block: var(--et-4);
+  font-size: var(--et-txt-xs);
+}
+.pub-footer__base-interior {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+  gap: var(--et-2) var(--et-5);
+  text-align: center;
+  opacity: 0.75;
+}
+.pub-footer__base strong { color: var(--et-amarillo); font-weight: 700; }
+.pub-footer__base a { color: inherit; }
+.pub-footer__admin { text-decoration: underline; }
+@media (min-width: 700px) {
+  .pub-footer__base-interior { justify-content: space-between; text-align: left; }
+}

@@ -87,12 +87,8 @@ function normalizar(datos) {
   return {
     destino: String(datos.destino || '').trim(),
     descripcion: String(datos.descripcion || '').trim(),
-    itinerario: Array.isArray(datos.itinerario)
-      ? datos.itinerario.map((l) => String(l).trim()).filter(Boolean)
-      : [],
-    incluye: Array.isArray(datos.incluye)
-      ? datos.incluye.map((l) => String(l).trim()).filter(Boolean)
-      : [],
+    itinerario: listaDeLineas(datos.itinerario),
+    incluye: listaDeLineas(datos.incluye),
     fechaInicio,
     fechaFin,
     mes: mesDe(fechaInicio),
@@ -101,8 +97,26 @@ function normalizar(datos) {
     fotoUrl: String(datos.fotoUrl || '').trim(),
     cupoMaximo: Number.parseInt(datos.cupoMaximo, 10) || 1,
     estado: datos.estado || 'activo',
-    puntoEncuentro: String(datos.puntoEncuentro || '').trim(),
+    puntosEncuentro: listaDeLineas(datos.puntosEncuentro ?? datos.puntoEncuentro),
   };
+}
+
+/** Acepta un array, un texto con saltos de línea o un texto suelto. */
+function listaDeLineas(valor) {
+  if (Array.isArray(valor)) return valor.map((l) => String(l).trim()).filter(Boolean);
+  return String(valor || '')
+    .split('\n')
+    .map((l) => l.trim())
+    .filter(Boolean);
+}
+
+/**
+ * Puntos de encuentro de un viaje, venga del formato nuevo (lista) o del
+ * antiguo (un solo texto). Así los viajes ya cargados siguen funcionando.
+ */
+export function puntosDeEncuentro(viaje) {
+  if (Array.isArray(viaje?.puntosEncuentro)) return viaje.puntosEncuentro;
+  return viaje?.puntoEncuentro ? [viaje.puntoEncuentro] : [];
 }
 
 export async function crearViaje(datos) {

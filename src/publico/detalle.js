@@ -2,7 +2,7 @@
 import { el } from '../utils/dom.js';
 import { esc, precio, urlImagenValida } from '../utils/formato.js';
 import { rangoFechas, duracionEnDias, yaPaso } from '../utils/fecha.js';
-import { obtenerViaje, cuposDisponibles, estaLleno } from '../modelo/trips.js';
+import { obtenerViaje, cuposDisponibles, estaLleno, puntosDeEncuentro } from '../modelo/trips.js';
 import { mensajeDeError } from '../modelo/errores.js';
 import { BRAND, texto } from '../../config/brand.js';
 import { montarFormulario } from './reserva.js';
@@ -40,6 +40,7 @@ export async function renderDetalle(tripId, { onVolver, onReservado }) {
   const lleno = estaLleno(viaje);
   const pocos = !lleno && disponibles <= BRAND.reglas.umbralUltimosCupos;
   const dias = duracionEnDias(viaje.fechaInicio, viaje.fechaFin);
+  const puntos = puntosDeEncuentro(viaje);
 
   const portada = urlImagenValida(viaje.fotoUrl)
     ? `<img class="pub-detalle__portada" src="${esc(viaje.fotoUrl)}" alt="${esc(viaje.destino)}"
@@ -80,10 +81,17 @@ export async function renderDetalle(tripId, { onVolver, onReservado }) {
           ${lista('Qué incluye', viaje.incluye, icono('check', { tam: 16 }))}
           ${lista('Itinerario', viaje.itinerario, '<span class="pub-lista__punto"></span>')}
 
-          ${viaje.puntoEncuentro ? `
+          ${puntos.length ? `
             <section class="pub-bloque et-revela">
-              <h2>Punto de encuentro</h2>
-              <p class="pub-punto">${icono('ubicacion', { tam: 18 })} ${esc(viaje.puntoEncuentro)}</p>
+              <h2>${puntos.length === 1 ? 'Punto de encuentro' : 'Puntos de encuentro'}</h2>
+              <ul class="pub-lista">
+                ${puntos.map((punto) => `
+                  <li class="pub-punto">
+                    <span class="pub-lista__marca pub-lista__marca--lugar">
+                      ${icono('ubicacion', { tam: 17 })}
+                    </span>${esc(punto)}
+                  </li>`).join('')}
+              </ul>
             </section>` : ''}
         </div>
 
