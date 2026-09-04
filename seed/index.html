@@ -1,0 +1,52 @@
+<!doctype html>
+<html lang="es-VE">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="robots" content="noindex, nofollow">
+  <title>Cargar datos de ejemplo</title>
+  <link rel="stylesheet" href="../styles/tokens.css">
+  <link rel="stylesheet" href="../styles/base.css">
+  <style>
+    body { padding: var(--et-6) var(--et-4); }
+    .caja { max-width: 640px; margin-inline: auto; }
+    #registro {
+      background: var(--et-marino); color: #C9F3F1;
+      font-family: ui-monospace, Menlo, Consolas, monospace;
+      font-size: var(--et-txt-sm); border-radius: var(--et-radio-sm);
+      padding: var(--et-3); margin-top: var(--et-4);
+      max-height: 320px; overflow-y: auto;
+    }
+    #registro p { margin: 0 0 2px; }
+    #registro .ok { color: #8CE0A5; }
+    #registro .error { color: #FFA79B; }
+  </style>
+</head>
+<body>
+  <main class="caja et-tarjeta">
+    <h1>Datos de ejemplo</h1>
+    <p>
+      Carga 4 viajes de prueba (Los Roques, Choroní, Mérida y Morrocoy) en
+      <strong id="marca">tu</strong> base de datos, para ver la plataforma con contenido real.
+    </p>
+
+    <p class="et-aviso et-aviso--alerta">
+      Las fotos apuntan a Unsplash y son solo un marcador de posición:
+      reemplázalas por las fotos reales desde el panel.
+    </p>
+
+    <p class="et-aviso" id="estado">Verificando sesión…</p>
+
+    <label class="et-campo" style="display:flex; gap:.5rem; align-items:center">
+      <input type="checkbox" id="incluir-reservas" checked>
+      Incluir también 6 reservas de ejemplo (3 ya confirmadas)
+    </label>
+
+    <button class="et-btn et-btn--sol" id="btn-cargar" disabled>Cargar datos de ejemplo</button>
+    <p style="margin-top:1rem"><a href="../admin.html">← Ir al panel</a></p>
+
+    <div id="registro"></div>
+  </main>
+  <script type="module" src="seed.js"></script>
+</body>
+</html>

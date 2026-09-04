@@ -197,6 +197,14 @@ export async function confirmarReserva(bookingId, pago) {
       personasConfirmadas: personas,
       confirmadaEn: serverTimestamp(),
       updatedAt: serverTimestamp(),
+      // Resumen denormalizado para que el panel muestre el pago sin tener que
+      // leer la subcolección reserva por reserva.
+      ultimoPago: {
+        metodoPago: String(pago.metodoPago),
+        fechaPago: String(pago.fechaPago),
+        montoPagado: monto,
+        registradoPor: String(pago.registradoPor || 'admin'),
+      },
     });
 
     tx.set(doc(collection(refBooking(bookingId), COL.pagos)), {

@@ -55,6 +55,13 @@ export function fechaCorta(iso) {
   return `${d.getUTCDate()} de ${MESES[d.getUTCMonth()]}`;
 }
 
+/** "2026-03-14" → "14/03/2026". */
+export function fechaNumerica(iso) {
+  if (!iso) return '—';
+  const [a, m, d] = String(iso).split('-');
+  return `${d}/${m}/${a}`;
+}
+
 /** "2026-03-14" → "sábado, 14 de marzo de 2026". */
 export function fechaLarga(iso) {
   return new Intl.DateTimeFormat('es-VE', {
