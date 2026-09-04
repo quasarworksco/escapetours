@@ -1,1 +1,77 @@
+<!doctype html>
+<html lang="es-VE">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Escape Tours Mcbo · Próximos viajes</title>
+  <meta name="description" content="Viajes y excursiones grupales saliendo desde Maracaibo. Cupos limitados.">
+  <meta name="theme-color" content="#14B8B3">
 
+  <meta property="og:type" content="website">
+  <meta property="og:title" id="og-title" content="Escape Tours Mcbo · Próximos viajes">
+  <meta property="og:description" id="og-desc" content="Escoge tu destino y aparta tu cupo.">
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles/tokens.css">
+  <link rel="stylesheet" href="styles/base.css">
+  <link rel="stylesheet" href="styles/publico.css">
+</head>
+<body>
+
+  <!-- ===================== CABECERA ===================== -->
+  <header class="pub-header">
+    <div class="et-contenedor pub-header__interior">
+      <a class="pub-marca" href="#/">
+        <span class="pub-marca__logo" id="marca-logo"></span>
+        <span>
+          <strong id="marca-nombre">Escape Tours Mcbo</strong>
+          <small id="marca-eslogan">Vive Venezuela, un viaje a la vez</small>
+        </span>
+      </a>
+      <a class="et-btn et-btn--wa et-btn--sm" id="btn-wa-header" href="#" target="_blank" rel="noopener">
+        <span id="btn-wa-icono"></span> Escríbenos
+      </a>
+    </div>
+  </header>
+
+  <!-- ===================== CALENDARIO ===================== -->
+  <main id="vista-calendario">
+    <section class="pub-hero">
+      <div class="et-contenedor">
+        <h1 id="hero-titulo" class="et-entra">Próximos viajes</h1>
+        <p id="hero-subtitulo" class="et-entra" style="--i:1">Escoge tu destino, aparta tu cupo y nosotros nos encargamos del resto.</p>
+      </div>
+    </section>
+
+    <div class="et-contenedor">
+      <nav class="pub-meses" aria-label="Navegación por mes">
+        <button class="pub-meses__flecha" id="mes-anterior" type="button" aria-label="Mes anterior"></button>
+        <h2 class="pub-meses__actual" id="mes-actual" aria-live="polite">—</h2>
+        <button class="pub-meses__flecha" id="mes-siguiente" type="button" aria-label="Mes siguiente"></button>
+      </nav>
+
+      <div id="lista-viajes" class="pub-viajes"></div>
+    </div>
+  </main>
+
+  <!-- ===================== DETALLE DEL VIAJE ===================== -->
+  <main id="vista-detalle" hidden></main>
+
+  <!-- ===================== CONFIRMACIÓN ===================== -->
+  <main id="vista-confirmacion" hidden></main>
+
+  <!-- ===================== PIE ===================== -->
+  <footer class="pub-footer">
+    <div class="et-contenedor">
+      <p><strong id="footer-nombre">Escape Tours Mcbo</strong></p>
+      <p id="footer-ciudad">Maracaibo, Venezuela</p>
+      <p class="pub-footer__enlaces" id="footer-enlaces"></p>
+      <p class="pub-footer__admin"><a href="admin.html">Acceso del equipo</a></p>
+    </div>
+  </footer>
+
+  <script type="module" src="src/publico/main.js"></script>
+</body>
+</html>

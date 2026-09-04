@@ -1,0 +1,300 @@
+<!doctype html>
+<html lang="es-VE">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="robots" content="noindex, nofollow">
+  <title>Panel · Escape Tours Mcbo</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles/tokens.css">
+  <link rel="stylesheet" href="styles/base.css">
+  <link rel="stylesheet" href="styles/admin.css">
+</head>
+<body class="admin">
+
+  <!-- ================= PANTALLA DE CARGA ================= -->
+  <div id="pantalla-carga" class="admin-carga">
+    <div class="admin-carga__spinner" aria-hidden="true"></div>
+    <p>Verificando sesión…</p>
+  </div>
+
+  <!-- ================= LOGIN ================= -->
+  <main id="pantalla-login" class="admin-login" hidden>
+    <form class="admin-login__caja" id="form-login" novalidate>
+      <div class="admin-login__marca">
+        <span class="admin-login__logo" id="login-logo"></span>
+        <h1 id="login-titulo">Escape Tours Mcbo</h1>
+        <p class="admin-login__sub">Panel de administración</p>
+      </div>
+
+      <div class="et-campo">
+        <label for="login-email">Correo electrónico</label>
+        <input class="et-input" type="email" id="login-email" name="email"
+               autocomplete="username" required placeholder="tucorreo@gmail.com">
+      </div>
+
+      <div class="et-campo">
+        <label for="login-password">Contraseña</label>
+        <input class="et-input" type="password" id="login-password" name="password"
+               autocomplete="current-password" required placeholder="••••••••">
+      </div>
+
+      <p class="et-aviso et-aviso--error" id="login-error" hidden></p>
+
+      <button class="et-btn et-btn--mar et-btn--bloque" type="submit" id="btn-login">
+        Entrar
+      </button>
+
+      <p class="admin-login__pie">
+        <a href="index.html" id="enlace-publico">Volver al sitio público</a>
+      </p>
+    </form>
+  </main>
+
+  <!-- ================= PANEL ================= -->
+  <div id="pantalla-panel" hidden>
+
+    <header class="admin-header">
+      <div class="admin-header__interior">
+        <a class="admin-header__marca" href="index.html" target="_blank" rel="noopener">
+          <span class="admin-header__logo" id="header-logo"></span>
+          <span id="header-nombre">Escape Tours Mcbo</span>
+        </a>
+        <div class="admin-header__sesion">
+          <span class="admin-header__usuario" id="header-usuario"></span>
+          <button class="et-btn et-btn--contorno et-btn--sm" id="btn-salir" type="button">
+            <span id="icono-salir"></span> Cerrar sesión
+          </button>
+        </div>
+      </div>
+
+      <nav class="admin-tabs" aria-label="Secciones del panel">
+        <button class="admin-tab" data-tab="viajes" aria-current="page" type="button">Viajes</button>
+        <button class="admin-tab" data-tab="reservas" type="button">
+          Reservas <span class="admin-tab__contador" id="contador-pendientes" hidden></span>
+        </button>
+        <button class="admin-tab" data-tab="ajustes" type="button">Datos de pago</button>
+      </nav>
+    </header>
+
+    <main class="et-contenedor admin-main">
+
+      <!-- ---------- VIAJES ---------- -->
+      <section id="tab-viajes" class="admin-seccion">
+        <div class="admin-seccion__titulo">
+          <div>
+            <h2>Viajes</h2>
+            <p class="admin-seccion__sub" id="resumen-viajes"></p>
+          </div>
+          <button class="et-btn et-btn--sol" id="btn-nuevo-viaje" type="button">
+            <span id="icono-nuevo"></span> Nuevo viaje
+          </button>
+        </div>
+        <div id="lista-viajes" class="admin-viajes"></div>
+      </section>
+
+      <!-- ---------- RESERVAS ---------- -->
+      <section id="tab-reservas" class="admin-seccion" hidden>
+        <div class="admin-seccion__titulo">
+          <div>
+            <h2>Reservas</h2>
+            <p class="admin-seccion__sub" id="resumen-reservas"></p>
+          </div>
+        </div>
+
+        <div class="admin-filtros">
+          <div class="et-campo">
+            <label for="filtro-viaje">Viaje</label>
+            <select class="et-select" id="filtro-viaje">
+              <option value="">Todos los viajes</option>
+            </select>
+          </div>
+          <div class="et-campo">
+            <label for="filtro-estado">Estado</label>
+            <select class="et-select" id="filtro-estado">
+              <option value="pendiente">Pendientes</option>
+              <option value="confirmada">Confirmadas</option>
+              <option value="cancelada">Canceladas</option>
+              <option value="">Todas</option>
+            </select>
+          </div>
+          <div class="et-campo">
+            <label for="filtro-busqueda">Buscar</label>
+            <input class="et-input" type="search" id="filtro-busqueda"
+                   placeholder="Nombre o teléfono…">
+          </div>
+        </div>
+
+        <div id="lista-reservas" class="admin-reservas"></div>
+      </section>
+
+      <!-- ---------- AJUSTES ---------- -->
+      <section id="tab-ajustes" class="admin-seccion" hidden>
+        <div class="admin-seccion__titulo">
+          <div>
+            <h2>Datos de pago</h2>
+            <p class="admin-seccion__sub">
+              Esto es lo que ve el cliente después de reservar.
+            </p>
+          </div>
+        </div>
+        <div id="editor-ajustes" class="et-tarjeta"></div>
+      </section>
+
+    </main>
+  </div>
+
+  <!-- ================= MODAL: VIAJE ================= -->
+  <dialog class="admin-modal" id="modal-viaje">
+    <form method="dialog" id="form-viaje" class="admin-modal__caja">
+      <header class="admin-modal__header">
+        <h3 id="modal-viaje-titulo">Nuevo viaje</h3>
+        <button class="admin-modal__cerrar" type="button" data-cerrar aria-label="Cerrar">×</button>
+      </header>
+
+      <div class="admin-modal__cuerpo">
+        <div class="et-campo">
+          <label for="viaje-destino">Destino *</label>
+          <input class="et-input" id="viaje-destino" required maxlength="120"
+                 placeholder="Los Roques">
+        </div>
+
+        <div class="et-fila et-fila--2">
+          <div class="et-campo">
+            <label for="viaje-fecha-inicio">Fecha de salida *</label>
+            <input class="et-input" type="date" id="viaje-fecha-inicio" required>
+          </div>
+          <div class="et-campo">
+            <label for="viaje-fecha-fin">Fecha de regreso</label>
+            <input class="et-input" type="date" id="viaje-fecha-fin">
+            <span class="et-ayuda">Déjala vacía si el viaje es de un solo día.</span>
+          </div>
+        </div>
+
+        <div class="et-fila et-fila--2">
+          <div class="et-campo">
+            <label for="viaje-precio">Precio por persona (USD) *</label>
+            <input class="et-input" type="number" id="viaje-precio" min="0" step="1" required
+                   placeholder="320">
+          </div>
+          <div class="et-campo">
+            <label for="viaje-cupo">Cupo máximo *</label>
+            <input class="et-input" type="number" id="viaje-cupo" min="1" step="1" required
+                   placeholder="20">
+            <span class="et-ayuda" id="viaje-cupo-ayuda"></span>
+          </div>
+        </div>
+
+        <div class="et-campo">
+          <label for="viaje-foto">URL de la foto</label>
+          <input class="et-input" type="url" id="viaje-foto"
+                 placeholder="https://images.unsplash.com/photo-...">
+          <span class="et-ayuda">
+            Pega el enlace de una imagen ya publicada (Unsplash, Drive, Instagram…).
+            No se suben archivos.
+          </span>
+          <img class="admin-preview" id="viaje-foto-preview" alt="" hidden>
+        </div>
+
+        <div class="et-campo">
+          <label for="viaje-descripcion">Descripción</label>
+          <textarea class="et-textarea" id="viaje-descripcion" maxlength="4000"
+                    placeholder="3 días y 2 noches en el archipiélago…"></textarea>
+        </div>
+
+        <div class="et-campo">
+          <label for="viaje-incluye">¿Qué incluye? (una línea por ítem)</label>
+          <textarea class="et-textarea" id="viaje-incluye"
+                    placeholder="Transporte ida y vuelta&#10;Posada con desayuno&#10;Tour a Cayo de Agua"></textarea>
+        </div>
+
+        <div class="et-campo">
+          <label for="viaje-itinerario">Itinerario (una línea por día)</label>
+          <textarea class="et-textarea" id="viaje-itinerario"
+                    placeholder="Día 1: Salida 4:00 am desde Maracaibo&#10;Día 2: Tour por los cayos"></textarea>
+        </div>
+
+        <div class="et-fila et-fila--2">
+          <div class="et-campo">
+            <label for="viaje-punto">Punto de encuentro</label>
+            <input class="et-input" id="viaje-punto" placeholder="C.C. Lago Mall, 4:00 am">
+          </div>
+          <div class="et-campo">
+            <label for="viaje-estado">Estado</label>
+            <select class="et-select" id="viaje-estado">
+              <option value="activo">Activo — visible y recibiendo reservas</option>
+              <option value="finalizado">Finalizado — oculto del calendario</option>
+              <option value="cancelado">Cancelado — oculto del calendario</option>
+            </select>
+          </div>
+        </div>
+
+        <p class="et-aviso et-aviso--error" id="viaje-error" hidden></p>
+      </div>
+
+      <footer class="admin-modal__pie">
+        <button class="et-btn et-btn--contorno" type="button" data-cerrar>Cancelar</button>
+        <button class="et-btn et-btn--sol" type="submit" id="btn-guardar-viaje">Guardar viaje</button>
+      </footer>
+    </form>
+  </dialog>
+
+  <!-- ================= MODAL: CONFIRMAR PAGO ================= -->
+  <dialog class="admin-modal" id="modal-pago">
+    <form method="dialog" id="form-pago" class="admin-modal__caja">
+      <header class="admin-modal__header">
+        <h3>Confirmar pago</h3>
+        <button class="admin-modal__cerrar" type="button" data-cerrar aria-label="Cerrar">×</button>
+      </header>
+
+      <div class="admin-modal__cuerpo">
+        <div class="admin-pago__resumen" id="pago-resumen"></div>
+
+        <div class="et-fila et-fila--2">
+          <div class="et-campo">
+            <label for="pago-metodo">Método de pago *</label>
+            <select class="et-select" id="pago-metodo" required></select>
+          </div>
+          <div class="et-campo">
+            <label for="pago-fecha">Fecha del pago *</label>
+            <input class="et-input" type="date" id="pago-fecha" required>
+          </div>
+        </div>
+
+        <div class="et-fila et-fila--2">
+          <div class="et-campo">
+            <label for="pago-monto">Monto pagado (USD) *</label>
+            <input class="et-input" type="number" id="pago-monto" min="0" step="0.01" required>
+            <span class="et-ayuda" id="pago-monto-ayuda"></span>
+          </div>
+          <div class="et-campo">
+            <label for="pago-personas">Personas confirmadas *</label>
+            <input class="et-input" type="number" id="pago-personas" min="1" step="1" required>
+            <span class="et-ayuda" id="pago-personas-ayuda"></span>
+          </div>
+        </div>
+
+        <div class="et-campo">
+          <label for="pago-notas">Notas (opcional)</label>
+          <textarea class="et-textarea" id="pago-notas" maxlength="500"
+                    placeholder="Abonó el 50%. Falta el resto antes del 10/03."></textarea>
+        </div>
+
+        <p class="et-aviso et-aviso--error" id="pago-error" hidden></p>
+      </div>
+
+      <footer class="admin-modal__pie">
+        <button class="et-btn et-btn--contorno" type="button" data-cerrar>Cancelar</button>
+        <button class="et-btn et-btn--mar" type="submit" id="btn-guardar-pago">
+          Confirmar reserva
+        </button>
+      </footer>
+    </form>
+  </dialog>
+
+  <script type="module" src="src/admin/main.js"></script>
+</body>
+</html>

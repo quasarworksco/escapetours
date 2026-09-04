@@ -1,0 +1,482 @@
+/* ==========================================================================
+   Panel de administración
+   ========================================================================== */
+
+.admin { background: var(--et-gris-50); }
+
+/* --- Carga inicial -------------------------------------------------------- */
+.admin-carga {
+  min-height: 100dvh;
+  display: grid;
+  place-content: center;
+  justify-items: center;
+  gap: var(--et-3);
+  color: var(--et-texto-suave);
+}
+.admin-carga__spinner {
+  width: 34px; height: 34px;
+  border: 3px solid var(--et-gris-200);
+  border-top-color: var(--et-turquesa);
+  border-radius: 50%;
+  animation: et-girar 0.8s linear infinite;
+}
+
+/* --- Login ---------------------------------------------------------------- */
+.admin-login {
+  min-height: 100dvh;
+  display: grid;
+  place-items: center;
+  padding: var(--et-4);
+  background:
+    radial-gradient(1000px 500px at 15% -10%, var(--et-amarillo-suave), transparent 60%),
+    radial-gradient(900px 480px at 100% 110%, var(--et-turquesa-suave), transparent 60%),
+    var(--et-arena);
+}
+.admin-login__caja {
+  width: 100%;
+  max-width: 400px;
+  background: var(--et-blanco);
+  padding: var(--et-6);
+  border-radius: var(--et-radio-lg);
+  box-shadow: var(--et-sombra-lg);
+}
+.admin-login__marca { text-align: center; margin-bottom: var(--et-5); }
+.admin-login__logo { display: inline-flex; }
+.admin-login__marca h1 { font-size: var(--et-txt-xl); margin: var(--et-2) 0 0; }
+.admin-login__sub { color: var(--et-texto-suave); font-size: var(--et-txt-sm); margin: 0; }
+.admin-login__pie {
+  text-align: center;
+  margin: var(--et-4) 0 0;
+  font-size: var(--et-txt-sm);
+}
+
+/* --- Cabecera ------------------------------------------------------------- */
+.admin-header {
+  background: var(--et-blanco);
+  border-bottom: 1px solid var(--et-borde);
+  position: sticky;
+  top: 0;
+  z-index: 50;
+}
+.admin-header__interior {
+  max-width: var(--et-ancho-max);
+  margin-inline: auto;
+  padding: var(--et-3) var(--et-4);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--et-3);
+}
+.admin-header__marca {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--et-2);
+  font-family: var(--et-fuente-titulo);
+  font-weight: 800;
+  color: var(--et-marino);
+  text-decoration: none;
+}
+.admin-header__sesion { display: flex; align-items: center; gap: var(--et-3); }
+.admin-header__usuario {
+  font-size: var(--et-txt-sm);
+  color: var(--et-texto-suave);
+}
+@media (max-width: 560px) { .admin-header__usuario { display: none; } }
+
+.admin-tabs {
+  max-width: var(--et-ancho-max);
+  margin-inline: auto;
+  padding: 0 var(--et-4);
+  display: flex;
+  gap: var(--et-1);
+  overflow-x: auto;
+}
+.admin-tab {
+  appearance: none;
+  background: none;
+  border: none;
+  border-bottom: 3px solid transparent;
+  padding: var(--et-3) var(--et-3);
+  font: inherit;
+  font-weight: 650;
+  color: var(--et-texto-suave);
+  cursor: pointer;
+  white-space: nowrap;
+  display: inline-flex;
+  align-items: center;
+  gap: var(--et-2);
+}
+.admin-tab:hover { color: var(--et-texto); }
+.admin-tab[aria-current='page'] {
+  color: var(--et-marino);
+  border-bottom-color: var(--et-amarillo);
+}
+.admin-tab__contador {
+  background: var(--et-coral);
+  color: var(--et-blanco);
+  font-size: var(--et-txt-xs);
+  font-weight: 700;
+  min-width: 20px;
+  padding: 0 6px;
+  border-radius: var(--et-radio-full);
+  text-align: center;
+}
+
+.admin-main { padding-block: var(--et-5) var(--et-8); }
+
+.admin-seccion__titulo {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: var(--et-3);
+  flex-wrap: wrap;
+  margin-bottom: var(--et-5);
+}
+.admin-seccion__titulo h2 { margin: 0; }
+.admin-seccion__sub {
+  margin: var(--et-1) 0 0;
+  color: var(--et-texto-suave);
+  font-size: var(--et-txt-sm);
+}
+
+/* --- Tarjetas de viaje ---------------------------------------------------- */
+.admin-viajes { display: grid; gap: var(--et-4); }
+@media (min-width: 760px) {
+  .admin-viajes { grid-template-columns: repeat(auto-fill, minmax(340px, 1fr)); }
+}
+
+.admin-viaje {
+  background: var(--et-blanco);
+  border-radius: var(--et-radio);
+  box-shadow: var(--et-sombra-sm);
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  border: 1px solid var(--et-borde);
+}
+.admin-viaje--inactivo { opacity: 0.62; }
+.admin-viaje--lleno { border-color: var(--et-coral); }
+
+.admin-viaje__medio { position: relative; height: 130px; overflow: hidden; }
+.admin-viaje__foto {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform var(--et-t-lenta) var(--et-salida);
+}
+.admin-viaje:hover .admin-viaje__foto { transform: scale(1.04); }
+.admin-viaje__sinfoto {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  color: var(--et-gris-400);
+  background: var(--et-gris-100);
+}
+.admin-viaje__cuerpo { padding: var(--et-4); flex: 1; }
+.admin-viaje__titulo {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: var(--et-2);
+  margin-bottom: var(--et-1);
+}
+.admin-viaje__titulo h3 { margin: 0; font-size: var(--et-txt-lg); }
+.admin-viaje__meta {
+  color: var(--et-texto-suave);
+  font-size: var(--et-txt-sm);
+  margin-bottom: var(--et-3);
+}
+.admin-viaje__precio { font-weight: 700; color: var(--et-marino); }
+
+.admin-cupos { margin-top: var(--et-3); }
+.admin-cupos__cifras {
+  display: flex;
+  justify-content: space-between;
+  font-size: var(--et-txt-sm);
+  margin-bottom: var(--et-1);
+}
+.admin-cupos__cifras strong { font-size: var(--et-txt-base); }
+.admin-cupos__barra {
+  height: 9px;
+  background: var(--et-gris-100);
+  border-radius: var(--et-radio-full);
+  overflow: hidden;
+}
+.admin-cupos__relleno {
+  height: 100%;
+  background: var(--et-turquesa);
+  border-radius: var(--et-radio-full);
+  transition: width var(--et-transicion);
+}
+.admin-cupos__relleno--casi { background: var(--et-amarillo-oscuro); }
+.admin-cupos__relleno--lleno { background: var(--et-coral); }
+.admin-cupos__nota {
+  display: flex;
+  align-items: center;
+  gap: var(--et-1);
+  font-size: var(--et-txt-xs);
+  color: var(--et-texto-suave);
+  margin-top: var(--et-1);
+}
+.admin-cupos__nota--alerta { color: var(--et-alerta); font-weight: 600; }
+
+.admin-viaje__acciones {
+  display: grid;
+  grid-template-columns: 1fr auto auto;   /* nunca se parte en dos líneas */
+  gap: var(--et-2);
+  padding: var(--et-3) var(--et-4);
+  border-top: 1px solid var(--et-borde);
+  background: var(--et-gris-50);
+}
+.admin-viaje__acciones .et-btn { padding-inline: 0.8rem; }
+
+/* --- Filtros -------------------------------------------------------------- */
+.admin-filtros {
+  display: grid;
+  gap: var(--et-3);
+  margin-bottom: var(--et-5);
+}
+@media (min-width: 720px) {
+  .admin-filtros { grid-template-columns: 2fr 1fr 1.5fr; align-items: end; }
+}
+.admin-filtros .et-campo { margin-bottom: 0; }
+
+/* --- Reservas ------------------------------------------------------------- */
+.admin-reservas { display: grid; gap: var(--et-3); }
+
+.admin-reserva {
+  background: var(--et-blanco);
+  border: 1px solid var(--et-borde);
+  border-left: 4px solid var(--et-gris-200);
+  border-radius: var(--et-radio);
+  padding: var(--et-4);
+  display: grid;
+  gap: var(--et-3);
+}
+.admin-reserva--pendiente  { border-left-color: var(--et-alerta); }
+.admin-reserva--confirmada { border-left-color: var(--et-exito); }
+.admin-reserva--cancelada  { border-left-color: var(--et-gris-400); opacity: 0.75; }
+
+.admin-reserva__fila {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: var(--et-3);
+  flex-wrap: wrap;
+}
+.admin-reserva__nombre {
+  font-family: var(--et-fuente-titulo);
+  font-size: var(--et-txt-lg);
+  font-weight: 700;
+  margin: 0;
+}
+.admin-reserva__viaje { font-size: var(--et-txt-sm); color: var(--et-texto-suave); }
+.admin-reserva__datos {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--et-2) var(--et-5);
+  font-size: var(--et-txt-sm);
+}
+.admin-reserva__dato { display: flex; flex-direction: column; }
+.admin-reserva__dato dt {
+  font-size: var(--et-txt-xs);
+  color: var(--et-texto-suave);
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+.admin-reserva__dato dd { margin: 0; font-weight: 600; }
+.admin-reserva__acciones { display: flex; gap: var(--et-2); flex-wrap: wrap; }
+.admin-reserva__pago {
+  display: flex;
+  align-items: center;
+  gap: var(--et-1);
+  flex-wrap: wrap;
+  color: var(--et-exito);
+  background: var(--et-exito-suave);
+  border-radius: var(--et-radio-sm);
+  padding: var(--et-2) var(--et-3);
+  font-size: var(--et-txt-sm);
+}
+.admin-reserva__notas {
+  display: flex;
+  gap: var(--et-2);
+  background: var(--et-gris-50);
+  border-radius: var(--et-radio-sm);
+  padding: var(--et-2) var(--et-3);
+  font-size: var(--et-txt-sm);
+  color: var(--et-gris-800);
+}
+
+/* --- Modales -------------------------------------------------------------- */
+.admin-modal {
+  border: none;
+  padding: 0;
+  border-radius: var(--et-radio-lg);
+  max-width: 620px;
+  width: calc(100vw - 2rem);
+  max-height: 92dvh;
+  box-shadow: var(--et-sombra-lg);
+  color: var(--et-texto);
+  background: var(--et-blanco);
+}
+.admin-modal::backdrop { background: rgba(11, 59, 69, 0.45); backdrop-filter: blur(2px); }
+.admin-modal__caja { display: flex; flex-direction: column; max-height: 92dvh; }
+.admin-modal__header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: var(--et-4) var(--et-5);
+  border-bottom: 1px solid var(--et-borde);
+}
+.admin-modal__header h3 { margin: 0; }
+.admin-modal__cerrar {
+  display: grid;
+  place-items: center;
+  appearance: none;
+  background: none;
+  border: none;
+  width: 34px;
+  height: 34px;
+  border-radius: 50%;
+  color: var(--et-texto-suave);
+  cursor: pointer;
+  transition: background-color var(--et-transicion), color var(--et-transicion),
+              transform var(--et-t-rapida) var(--et-rebote);
+}
+.admin-modal__cerrar:hover {
+  background: var(--et-gris-100);
+  color: var(--et-texto);
+  transform: rotate(90deg);
+}
+.admin-modal__cuerpo { padding: var(--et-5); overflow-y: auto; }
+.admin-modal__pie {
+  display: flex;
+  justify-content: flex-end;
+  gap: var(--et-2);
+  padding: var(--et-4) var(--et-5);
+  border-top: 1px solid var(--et-borde);
+  background: var(--et-gris-50);
+}
+
+.admin-preview {
+  margin-top: var(--et-2);
+  width: 100%;
+  height: 150px;
+  object-fit: cover;
+  border-radius: var(--et-radio-sm);
+  border: 1px solid var(--et-borde);
+}
+
+.admin-pago__resumen {
+  background: var(--et-turquesa-suave);
+  border-radius: var(--et-radio-sm);
+  padding: var(--et-3) var(--et-4);
+  margin-bottom: var(--et-4);
+  font-size: var(--et-txt-sm);
+}
+.admin-pago__cliente {
+  display: block;
+  font-family: var(--et-fuente-titulo);
+  font-weight: 700;
+  font-size: var(--et-txt-base);
+  margin-bottom: 2px;
+}
+.admin-pago__cifra { font-size: var(--et-txt-base); font-weight: 700; }
+
+/* --- Editor de métodos de pago -------------------------------------------- */
+.admin-metodo {
+  display: grid;
+  gap: var(--et-2);
+  grid-template-columns: 1fr;
+  padding: var(--et-3) 0;
+  border-bottom: 1px solid var(--et-borde);
+}
+@media (min-width: 700px) {
+  .admin-metodo { grid-template-columns: 180px 1fr auto auto; align-items: center; }
+}
+.admin-metodo__activo { display: flex; align-items: center; gap: var(--et-2); font-size: var(--et-txt-sm); }
+
+.admin-cupos__enlace {
+  appearance: none;
+  background: none;
+  border: none;
+  padding: 0;
+  margin-top: var(--et-1);
+  font: inherit;
+  font-size: var(--et-txt-xs);
+  color: var(--et-turquesa-oscuro);
+  text-decoration: underline;
+  text-underline-offset: 2px;
+  cursor: pointer;
+}
+.admin-cupos__enlace:hover { color: var(--et-marino); }
+
+
+/* ==========================================================================
+   Movimiento del panel
+   ========================================================================== */
+
+/* La barra de ocupación crece desde cero al pintarse. */
+.admin-cupos__relleno {
+  animation: et-crecer 900ms var(--et-salida) backwards;
+  animation-delay: calc(var(--i, 0) * var(--et-escalon) + 180ms);
+}
+@keyframes et-crecer { from { width: 0; } }
+
+/* Modales: el fondo se funde y la caja emerge. */
+.admin-modal[open] { animation: et-modal var(--et-t-media) var(--et-salida) backwards; }
+.admin-modal[open]::backdrop { animation: et-fundir var(--et-t-media) var(--et-suave) backwards; }
+@keyframes et-modal {
+  from { opacity: 0; transform: translateY(18px) scale(0.97); }
+  to   { opacity: 1; transform: none; }
+}
+
+/* Tarjetas de viaje: elevación al pasar por encima. */
+.admin-viaje {
+  transition: transform var(--et-t-media) var(--et-salida),
+              box-shadow var(--et-t-media) var(--et-salida),
+              border-color var(--et-transicion);
+}
+.admin-viaje:hover { transform: translateY(-2px); box-shadow: var(--et-sombra); }
+
+/* Pestañas: el subrayado se desliza. */
+.admin-tab { position: relative; transition: color var(--et-transicion); }
+.admin-tab::after {
+  content: '';
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: -3px;
+  height: 3px;
+  background: var(--et-amarillo);
+  transform: scaleX(0);
+  transform-origin: center;
+  transition: transform var(--et-t-media) var(--et-salida);
+}
+.admin-tab[aria-current='page'] {
+  border-bottom-color: transparent;   /* lo dibuja el pseudoelemento animado */
+}
+.admin-tab[aria-current='page']::after { transform: scaleX(1); }
+
+/* El contador de pendientes late al aparecer. */
+.admin-tab__contador { animation: et-latir var(--et-t-lenta) var(--et-rebote) backwards; }
+@keyframes et-latir {
+  from { opacity: 0; transform: scale(0.4); }
+  to   { opacity: 1; transform: none; }
+}
+
+/* Tarjetas de reserva. */
+.admin-reserva {
+  transition: border-left-color var(--et-t-media) var(--et-suave),
+              box-shadow var(--et-t-media) var(--et-salida);
+}
+.admin-reserva:hover { box-shadow: var(--et-sombra-sm); }
+
+/* Vista previa de la foto en el formulario. */
+.admin-preview:not([hidden]) { animation: et-emerger var(--et-t-media) var(--et-salida) backwards; }
+
+/* Enlace de recalcular. */
+.admin-cupos__enlace { transition: color var(--et-transicion); }
