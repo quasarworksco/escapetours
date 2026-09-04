@@ -4,10 +4,14 @@
  *   #/                 → calendario
  *   #/viaje/<id>       → detalle del viaje (enlace compartible por WhatsApp)
  */
-import { el, mostrar } from '../utils/dom.js';
+import { el, mostrar, alHacerScroll, revelarAlEntrar } from '../utils/dom.js';
 import { BRAND, aplicarTemaDeMarca, linkWhatsApp, logoHtml, texto } from '../../config/brand.js';
 import { icono } from '../utils/iconos.js';
 import { FIREBASE_SIN_CONFIGURAR } from '../firebase.js';
+import { viajesPublicos, cuposDisponibles } from '../modelo/trips.js';
+import { precio } from '../utils/formato.js';
+import { urlImagenValida } from '../utils/formato.js';
+import { hoyISO } from '../utils/fecha.js';
 import { initCalendario } from './calendario.js';
 import { renderDetalle } from './detalle.js';
 import { renderConfirmacion } from './reserva.js';
@@ -52,10 +56,69 @@ function aplicarMarca() {
 }
 
 // ---------------------------------------------------------------------------
+//  Portada
+// ---------------------------------------------------------------------------
+
+/**
+ * Pone la foto de portada: la configurada en la marca o, si no hay, la del
+ * próximo viaje publicado. Si ninguna carga, se queda el degradado animado.
+ */
+function ponerFotoDePortada(url) {
+  if (!urlImagenValida(url)) return;
+  const capa = el('#hero-foto');
+  // Se precarga aparte para no mostrar la foto a medio bajar.
+  const prueba = new Image();
+  prueba.onload = () => {
+    // JSON.stringify entrecomilla y escapa: la URL no puede romper el CSS.
+    capa.style.backgroundImage = `url(${JSON.stringify(url)})`;
+    capa.classList.add('pub-hero__foto--lista');
+    document.body.classList.add('pub--conportada');
+  };
+  prueba.src = url;
+}
+
+/** Tres cifras rápidas bajo el titular: destinos, precio desde y cupos. */
+function pintarDatosDePortada(viajes) {
+  const proximos = viajes.filter((v) => (v.fechaFin || v.fechaInicio) >= hoyISO());
+  if (!proximos.length) return;
+
+  const desde = Math.min(...proximos.map((v) => v.precio || 0));
+  const cupos = proximos.reduce((suma, v) => suma + cuposDisponibles(v), 0);
+
+  const datos = [
+    [proximos.length, proximos.length === 1 ? 'viaje abierto' : 'viajes abiertos'],
+    [precio(desde), 'por persona, desde'],
+    [cupos, cupos === 1 ? 'cupo disponible' : 'cupos disponibles'],
+  ];
+
+  el('#hero-datos').innerHTML = datos
+    .map(([valor, etiqueta]) => `
+      <div class="pub-hero__dato">
+        <b>${valor}</b><span>${etiqueta}</span>
+      </div>`)
+    .join('');
+}
+
+/** Cabecera de cristal al bajar y ligero parallax de la foto. */
+function activarEfectosDeScroll() {
+  const cabecera = el('#cabecera');
+  const foto = el('#hero-foto');
+  alHacerScroll((y) => {
+    cabecera.classList.toggle('pub-header--fijada', y > 24);
+    if (foto && y < window.innerHeight) {
+      foto.style.transform = `scale(1.06) translate3d(0, ${y * 0.22}px, 0)`;
+    }
+  });
+}
+
+// ---------------------------------------------------------------------------
 //  Enrutado
 // ---------------------------------------------------------------------------
 
 function mostrarVista(cual) {
+  // Solo en el calendario la cabecera flota sobre la portada; en las demás
+  // vistas el fondo es claro y el texto tiene que volver a ser oscuro.
+  document.body.classList.toggle('pub--enportada', cual === 'calendario');
   mostrar(el('#vista-calendario'), cual === 'calendario');
   mostrar(el('#vista-detalle'), cual === 'detalle');
   mostrar(el('#vista-confirmacion'), cual === 'confirmacion');
@@ -75,6 +138,7 @@ async function enrutar() {
   if (detalle) {
     mostrarVista('detalle');
     await renderDetalle(detalle[1], { onReservado: alReservar });
+    revelarAlEntrar(document.querySelectorAll('#vista-detalle .et-revela'));
     return;
   }
 
@@ -101,8 +165,22 @@ async function main() {
   }
 
   window.addEventListener('hashchange', enrutar);
+  activarEfectosDeScroll();
+
   await initCalendario({ onVerViaje: (id) => { location.hash = `#/viaje/${id}`; } });
   await enrutar();
+
+  // Los viajes ya están en memoria: no cuesta ninguna lectura extra.
+  try {
+    const viajes = await viajesPublicos();
+    pintarDatosDePortada(viajes);
+    const proximoConFoto = viajes
+      .filter((v) => (v.fechaFin || v.fechaInicio) >= hoyISO())
+      .find((v) => urlImagenValida(v.fotoUrl));
+    ponerFotoDePortada(BRAND.imagenes.portada || proximoConFoto?.fotoUrl);
+  } catch (err) {
+    console.warn('[Escape Tours] No se pudo preparar la portada', err);
+  }
 }
 
 main();

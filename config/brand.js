@@ -50,6 +50,14 @@ export const BRAND = {
     coral: '#F2603C',          // alertas y estados críticos
   },
 
+  // --- Imágenes -------------------------------------------------------------
+  // Foto de portada del sitio público. Si la dejas en null, la portada usa la
+  // foto del próximo viaje publicado; y si tampoco hay, se ve el degradado
+  // animado de fondo. Nunca queda un hueco vacío.
+  imagenes: {
+    portada: null,
+  },
+
   // --- Acceso al panel ------------------------------------------------------
   // El panel pide "usuario", no un correo. Firebase Authentication exige
   // formato de correo, así que al usuario escrito se le añade este dominio:

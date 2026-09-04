@@ -1,5 +1,5 @@
 /** Calendario público: viajes del mes seleccionado. */
-import { el, crear } from '../utils/dom.js';
+import { el, crear, revelarAlEntrar } from '../utils/dom.js';
 import { esc, precio, urlImagenValida } from '../utils/formato.js';
 import {
   mesActual, nombreMes, desplazarMes, rangoCorto, duracionEnDias, yaPaso,
@@ -78,9 +78,10 @@ async function pintar() {
   cont.innerHTML = '';
   viajes.forEach((viaje, i) => {
     const nodo = tarjeta(viaje);
-    nodo.style.setProperty('--i', i);   // entrada escalonada
+    nodo.style.setProperty('--i', Math.min(i, 5));  // el retraso se corta a los 6
     cont.append(nodo);
   });
+  revelarAlEntrar(cont.children);
 }
 
 function tarjeta(viaje) {
@@ -90,7 +91,7 @@ function tarjeta(viaje) {
   const dias = duracionEnDias(viaje.fechaInicio, viaje.fechaFin);
 
   const boton = crear('button', {
-    class: 'pub-viaje et-entra',
+    class: 'pub-viaje et-revela',
     type: 'button',
     'aria-label': `Ver ${viaje.destino}`,
   });
@@ -105,14 +106,14 @@ function tarjeta(viaje) {
   boton.innerHTML = `
     <div class="pub-viaje__medio">
       ${medio}
-      <div class="pub-viaje__cintas">
+    </div>
+    <div class="pub-viaje__cintas">
         <span class="pub-viaje__cinta">${esc(rangoCorto(viaje.fechaInicio, viaje.fechaFin))}</span>
         ${lleno
           ? `<span class="et-chip et-chip--error">${esc(texto('etiquetaAgotado'))}</span>`
           : pocos
             ? '<span class="et-chip et-chip--sol">¡Últimos cupos!</span>'
             : ''}
-      </div>
     </div>
     <div class="pub-viaje__cuerpo">
       <h3 class="pub-viaje__destino">${esc(viaje.destino)}</h3>

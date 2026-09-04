@@ -2,14 +2,77 @@
    Sitio público — mobile first (el tráfico llega de Instagram y WhatsApp)
    ========================================================================== */
 
-/* --- Cabecera ------------------------------------------------------------- */
+/* --- Fondo vivo -----------------------------------------------------------
+   Cuatro manchas de color que derivan lentamente. Es lo que hace que el
+   cristal de las tarjetas tenga algo que difuminar; sin esto, el efecto no
+   se nota. Va fijo y detrás de todo. */
+body.pub { background: var(--et-arena); }
+
+body.pub::before {
+  content: '';
+  position: fixed;
+  inset: -25%;
+  z-index: -2;
+  pointer-events: none;
+  background:
+    radial-gradient(38% 40% at 18% 22%,
+      color-mix(in srgb, var(--et-turquesa) 55%, transparent), transparent 68%),
+    radial-gradient(34% 36% at 84% 16%,
+      color-mix(in srgb, var(--et-amarillo) 62%, transparent), transparent 68%),
+    radial-gradient(42% 44% at 72% 78%,
+      color-mix(in srgb, var(--et-coral) 34%, transparent), transparent 70%),
+    radial-gradient(36% 40% at 10% 84%,
+      color-mix(in srgb, var(--et-turquesa) 42%, transparent), transparent 70%);
+  filter: blur(28px);
+  animation: et-derivar 30s ease-in-out infinite alternate;
+}
+@keyframes et-derivar {
+  0%   { transform: translate3d(0, 0, 0) scale(1); }
+  50%  { transform: translate3d(-3%, 2.5%, 0) scale(1.08); }
+  100% { transform: translate3d(2.5%, -2%, 0) scale(1.03); }
+}
+
+/* Un velo claro encima del degradado, para que el texto siempre se lea. */
+body.pub::after {
+  content: '';
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+  background: linear-gradient(180deg,
+    color-mix(in srgb, var(--et-arena) 74%, transparent),
+    color-mix(in srgb, var(--et-arena) 90%, transparent));
+}
+
+/* --- Cabecera -------------------------------------------------------------
+   Transparente sobre la portada; al bajar se vuelve cristal. */
 .pub-header {
-  background: var(--et-blanco);
-  border-bottom: 1px solid var(--et-borde);
   position: sticky;
   top: 0;
   z-index: 40;
+  background: transparent;
+  border-bottom: 1px solid transparent;
+  transition: background-color var(--et-t-media) var(--et-suave),
+              border-color var(--et-t-media) var(--et-suave),
+              backdrop-filter var(--et-t-media) var(--et-suave);
 }
+/* Sobre la portada con foto, el texto va en blanco para que se lea. */
+body.pub--conportada.pub--enportada .pub-header:not(.pub-header--fijada) .pub-marca {
+  color: var(--et-blanco);
+  text-shadow: 0 1px 14px rgba(11, 59, 69, 0.45);
+}
+body.pub--conportada.pub--enportada .pub-header:not(.pub-header--fijada) .pub-marca small {
+  color: rgba(255, 255, 255, 0.85);
+}
+
+.pub-header--fijada {
+  background: var(--et-vidrio-denso);
+  -webkit-backdrop-filter: blur(var(--et-desenfoque)) saturate(1.6);
+  backdrop-filter: blur(var(--et-desenfoque)) saturate(1.6);
+  border-bottom-color: var(--et-vidrio-borde);
+  box-shadow: 0 4px 24px rgba(11, 59, 69, 0.06);
+}
+
 .pub-header__interior {
   display: flex;
   align-items: center;
@@ -42,29 +105,133 @@
 }
 @media (max-width: 430px) { .pub-marca small { display: none; } }
 
-/* --- Hero ----------------------------------------------------------------- */
+/* --- Portada --------------------------------------------------------------- */
 .pub-hero {
-  padding-block: var(--et-6) var(--et-5);
-  background:
-    radial-gradient(720px 320px at 10% -20%, var(--et-amarillo-suave), transparent 65%),
-    radial-gradient(680px 340px at 95% 0%, var(--et-turquesa-suave), transparent 62%),
-    var(--et-arena);
+  position: relative;
+  isolation: isolate;
+  min-height: 78svh;
+  margin-top: calc(-1 * var(--et-alto-cabecera, 68px));
+  padding-top: calc(var(--et-alto-cabecera, 68px) + var(--et-6));
+  padding-bottom: var(--et-8);
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  overflow: hidden;
 }
-.pub-hero h1 { margin-bottom: var(--et-2); }
+@media (min-width: 900px) { .pub-hero { min-height: 82svh; } }
+
+/* La foto se pone como background-image desde el JS. Escala un poco más que
+   el contenedor para poder moverse con el scroll sin dejar bordes. */
+.pub-hero__foto {
+  position: absolute;
+  inset: -12% 0 -6%;
+  z-index: -2;
+  background-size: cover;
+  background-position: center;
+  opacity: 0;
+  transform: scale(1.06);
+  transition: opacity 900ms var(--et-suave);
+  will-change: transform;
+}
+.pub-hero__foto--lista { opacity: 1; }
+
+/* Degradado que garantiza el contraste del texto sobre cualquier foto. */
+.pub-hero__velo { position: absolute; inset: 0; z-index: -1; }
+/* Sin foto (base recién creada, o la URL no cargó) el velo se aclara y el
+   texto pasa a oscuro: el degradado animado del fondo queda de protagonista.
+   La clase la pone el JS cuando la foto termina de cargar. */
+.pub-hero__velo {
+  background: linear-gradient(180deg,
+    transparent 0%, transparent 58%, var(--et-arena) 100%);
+}
+.pub-hero__contenido { color: var(--et-marino); position: relative; }
+.pub-hero__kicker { background: var(--et-vidrio-denso); color: var(--et-turquesa-oscuro); }
+.pub-hero__dato { background: var(--et-vidrio-denso); border-color: var(--et-vidrio-borde); }
+.pub-hero h1, .pub-hero p { text-shadow: none; }
+
+body.pub--conportada .pub-hero__velo {
+  background: linear-gradient(180deg,
+    rgba(11, 59, 69, 0.45) 0%,
+    rgba(11, 59, 69, 0.10) 32%,
+    rgba(11, 59, 69, 0.62) 78%,
+    var(--et-arena) 100%);
+}
+body.pub--conportada .pub-hero__contenido { color: var(--et-blanco); }
+body.pub--conportada .pub-hero__kicker,
+body.pub--conportada .pub-hero__dato {
+  background: var(--et-vidrio-oscuro);
+  border-color: var(--et-vidrio-borde-oscuro);
+  color: inherit;
+}
+body.pub--conportada .pub-hero h1 { text-shadow: 0 2px 24px rgba(11, 59, 69, 0.35); }
+body.pub--conportada .pub-hero p { text-shadow: 0 1px 12px rgba(11, 59, 69, 0.35); }
+.pub-hero__kicker {
+  display: inline-block;
+  padding: 0.35rem 0.9rem;
+  margin-bottom: var(--et-3);
+  border-radius: var(--et-radio-full);
+  background: var(--et-vidrio-oscuro);
+  -webkit-backdrop-filter: blur(10px);
+  backdrop-filter: blur(10px);
+  border: 1px solid var(--et-vidrio-borde-oscuro);
+  font-size: var(--et-txt-xs);
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+.pub-hero h1 {
+  font-size: clamp(2.4rem, 11vw, 4.5rem);
+  line-height: 1.02;
+  letter-spacing: -0.03em;
+  margin-bottom: var(--et-3);
+  text-shadow: 0 2px 24px rgba(11, 59, 69, 0.35);
+}
 .pub-hero p {
-  color: var(--et-texto-suave);
   font-size: var(--et-txt-lg);
-  max-width: 46ch;
+  max-width: 42ch;
   margin: 0;
+  opacity: 0.95;
+  text-shadow: 0 1px 12px rgba(11, 59, 69, 0.35);
 }
+
+/* Cifras rápidas: destinos del mes, precio desde, cupos. */
+.pub-hero__datos {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--et-2);
+  margin-top: var(--et-5);
+}
+.pub-hero__dato {
+  display: flex;
+  flex-direction: column;
+  padding: 0.6rem 1rem;
+  border-radius: var(--et-radio);
+  background: var(--et-vidrio-oscuro);
+  -webkit-backdrop-filter: blur(12px) saturate(1.4);
+  backdrop-filter: blur(12px) saturate(1.4);
+  border: 1px solid var(--et-vidrio-borde-oscuro);
+}
+.pub-hero__dato b {
+  font-family: var(--et-fuente-titulo);
+  font-size: var(--et-txt-xl);
+  line-height: 1.1;
+}
+.pub-hero__dato span { font-size: var(--et-txt-xs); opacity: 0.85; }
+
 
 /* --- Navegación de meses -------------------------------------------------- */
 .pub-meses {
   display: flex;
   align-items: center;
-  justify-content: center;
-  gap: var(--et-4);
-  padding-block: var(--et-5) var(--et-4);
+  justify-content: space-between;
+  gap: var(--et-3);
+  margin-block: calc(-1 * var(--et-6)) var(--et-5);
+  padding: var(--et-2);
+  border-radius: var(--et-radio-full);
+  position: relative;
+  z-index: 3;
+  max-width: 420px;
+  margin-inline: auto;
 }
 .pub-meses__actual {
   margin: 0;
@@ -73,51 +240,59 @@
   text-align: center;
 }
 .pub-meses__flecha {
-  width: 44px;
-  height: 44px;
+  width: 42px;
+  height: 42px;
+  flex: none;
   border-radius: 50%;
-  border: 1.5px solid var(--et-borde);
-  background: var(--et-blanco);
+  border: 1px solid var(--et-vidrio-borde);
+  background: var(--et-vidrio-denso);
   color: var(--et-marino);
-  font-size: 1.5rem;
-  line-height: 1;
   cursor: pointer;
-  transition: all var(--et-transicion);
 }
 .pub-meses__flecha:hover:not(:disabled) {
-  border-color: var(--et-turquesa-oscuro);
-  color: var(--et-turquesa-oscuro);
+  background: var(--et-marino);
+  color: var(--et-blanco);
 }
 .pub-meses__flecha:disabled { opacity: 0.35; cursor: not-allowed; }
 
 /* --- Tarjetas de viaje ---------------------------------------------------- */
 .pub-viajes {
   display: grid;
-  gap: var(--et-4);
+  gap: var(--et-5);
   padding-bottom: var(--et-8);
 }
-@media (min-width: 640px) {
-  .pub-viajes { grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); }
+@media (min-width: 700px) {
+  .pub-viajes { grid-template-columns: repeat(auto-fill, minmax(330px, 1fr)); }
 }
 
 .pub-viaje {
+  position: relative;
+  isolation: isolate;
   display: flex;
   flex-direction: column;
-  background: var(--et-superficie);
-  border-radius: var(--et-radio-lg);
+  justify-content: flex-end;
+  min-height: 420px;
+  border-radius: 26px;
   overflow: hidden;
-  box-shadow: var(--et-sombra-sm);
   text-align: left;
-  border: none;
+  border: 1px solid var(--et-vidrio-borde);
   padding: 0;
   font: inherit;
-  color: inherit;
+  color: var(--et-blanco);
   cursor: pointer;
-  transition: transform var(--et-transicion), box-shadow var(--et-transicion);
+  box-shadow: var(--et-vidrio-sombra);
+  transition: transform 420ms var(--et-salida), box-shadow 420ms var(--et-salida);
 }
-.pub-viaje:hover { transform: translateY(-3px); box-shadow: var(--et-sombra); }
+.pub-viaje.et-visible:hover,
+.pub-viaje.et-visible:focus-visible {
+  transform: translateY(-8px);
+  box-shadow:
+    0 18px 40px rgba(11, 59, 69, 0.16),
+    0 40px 80px rgba(11, 59, 69, 0.18);
+}
 
-.pub-viaje__medio { position: relative; aspect-ratio: 16 / 10; }
+/* La foto ocupa toda la tarjeta; el contenido va encima. */
+.pub-viaje__medio { position: absolute; inset: 0; z-index: -1; overflow: hidden; }
 .pub-viaje__foto {
   position: absolute;
   inset: 0;
@@ -128,68 +303,99 @@
 .pub-viaje__sinfoto {
   position: absolute;
   inset: 0;
-  background: linear-gradient(135deg, var(--et-turquesa-suave), var(--et-amarillo-suave));
+  background:
+    linear-gradient(150deg,
+      color-mix(in srgb, var(--et-turquesa) 85%, white),
+      color-mix(in srgb, var(--et-amarillo) 70%, white) 60%,
+      color-mix(in srgb, var(--et-coral) 55%, white));
+}
+/* Oscurecido inferior para que el texto blanco siempre se lea. */
+.pub-viaje__medio::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(180deg,
+    rgba(11, 59, 69, 0.18) 0%,
+    rgba(11, 59, 69, 0.02) 30%,
+    rgba(11, 59, 69, 0.55) 66%,
+    rgba(11, 59, 69, 0.86) 100%);
 }
 .pub-viaje__cintas {
   position: absolute;
-  top: var(--et-3);
-  left: var(--et-3);
-  right: var(--et-3);
+  top: var(--et-4);
+  left: var(--et-4);
+  right: var(--et-4);
   display: flex;
   align-items: flex-start;
   justify-content: space-between;
   gap: var(--et-2);
+  z-index: 2;
 }
 .pub-viaje__cinta {
-  background: var(--et-blanco);
-  padding: 0.25rem 0.7rem;
+  background: var(--et-vidrio-oscuro);
+  -webkit-backdrop-filter: blur(12px) saturate(1.5);
+  backdrop-filter: blur(12px) saturate(1.5);
+  border: 1px solid var(--et-vidrio-borde-oscuro);
+  color: var(--et-blanco);
+  padding: 0.3rem 0.8rem;
   border-radius: var(--et-radio-full);
   font-size: var(--et-txt-xs);
   font-weight: 700;
-  box-shadow: var(--et-sombra-sm);
 }
-.pub-viaje__cuerpo { padding: var(--et-4); flex: 1; display: flex; flex-direction: column; }
+.pub-viaje__cuerpo { padding: var(--et-4); }
 .pub-viaje__destino {
   font-family: var(--et-fuente-titulo);
-  font-size: var(--et-txt-xl);
-  font-weight: 700;
+  font-size: var(--et-txt-2xl);
+  font-weight: 800;
+  letter-spacing: -0.02em;
   margin: 0 0 var(--et-1);
+  text-shadow: 0 2px 16px rgba(11, 59, 69, 0.4);
 }
 .pub-viaje__desc {
-  color: var(--et-texto-suave);
   font-size: var(--et-txt-sm);
+  opacity: 0.9;
   margin-bottom: var(--et-3);
   display: -webkit-box;
   -webkit-line-clamp: 2;
   -webkit-box-orient: vertical;
   overflow: hidden;
 }
+/* Pie de cristal: el bloque que hace que la tarjeta se sienta "de vidrio". */
 .pub-viaje__pie {
   display: flex;
-  align-items: flex-end;
+  align-items: center;
   justify-content: space-between;
-  gap: var(--et-2);
-  margin-top: auto;
-  padding-top: var(--et-3);
-  border-top: 1px solid var(--et-borde);
+  gap: var(--et-3);
+  padding: var(--et-3) var(--et-4);
+  border-radius: 18px;
+  background: var(--et-vidrio-oscuro);
+  -webkit-backdrop-filter: blur(14px) saturate(1.5);
+  backdrop-filter: blur(14px) saturate(1.5);
+  border: 1px solid var(--et-vidrio-borde-oscuro);
+  transition: background-color var(--et-t-media) var(--et-suave);
 }
+.pub-viaje:hover .pub-viaje__pie { background: rgba(11, 59, 69, 0.58); }
 .pub-precio {
   font-family: var(--et-fuente-titulo);
   font-size: var(--et-txt-2xl);
   font-weight: 800;
   line-height: 1;
-  color: var(--et-marino);
+  color: inherit;
 }
 .pub-precio small {
   display: block;
   font-family: var(--et-fuente-texto);
   font-size: var(--et-txt-xs);
   font-weight: 500;
-  color: var(--et-texto-suave);
+  opacity: 0.78;
 }
-.pub-cupos { text-align: right; font-size: var(--et-txt-sm); }
+.pub-cupos { text-align: right; font-size: var(--et-txt-sm); line-height: 1.25; }
 .pub-cupos strong { display: block; font-size: var(--et-txt-base); }
-.pub-cupos--pocos strong { color: var(--et-coral); }
+.pub-cupos--pocos strong { color: var(--et-amarillo); }
+
+/* En la vista de detalle el precio vuelve sobre fondo claro. */
+.pub-reserva .pub-precio { color: var(--et-marino); }
+.pub-reserva .pub-precio small { color: var(--et-texto-suave); }
 
 /* --- Detalle -------------------------------------------------------------- */
 .pub-detalle__volver {
@@ -202,11 +408,17 @@
 }
 .pub-detalle__portada {
   width: 100%;
-  aspect-ratio: 16 / 9;
+  aspect-ratio: 4 / 3;
+  max-height: 62svh;
   object-fit: cover;
-  border-radius: var(--et-radio-lg);
-  background: linear-gradient(135deg, var(--et-turquesa-suave), var(--et-amarillo-suave));
+  border-radius: 26px;
+  background: linear-gradient(150deg,
+    color-mix(in srgb, var(--et-turquesa) 80%, white),
+    color-mix(in srgb, var(--et-amarillo) 65%, white) 60%,
+    color-mix(in srgb, var(--et-coral) 50%, white));
+  box-shadow: var(--et-vidrio-sombra);
 }
+@media (min-width: 700px) { .pub-detalle__portada { aspect-ratio: 21 / 9; } }
 .pub-detalle__portada--vacia { object-fit: none; }
 @media (min-width: 900px) {
   .pub-detalle__grid {
@@ -217,14 +429,29 @@
   }
   .pub-detalle__lateral { position: sticky; top: 88px; }
 }
-.pub-detalle__cabecera { padding-block: var(--et-4) var(--et-2); }
+.pub-detalle__cabecera { padding-block: var(--et-5) var(--et-4); }
+.pub-detalle__cabecera h1 {
+  font-size: clamp(2rem, 8vw, 3.2rem);
+  letter-spacing: -0.03em;
+}
 .pub-detalle__cabecera h1 { margin-bottom: var(--et-2); }
 .pub-detalle__fecha {
   color: var(--et-texto-suave);
   font-size: var(--et-txt-lg);
   margin: 0;
 }
-.pub-bloque { margin-bottom: var(--et-5); }
+/* Bloques de contenido sobre tarjeta clara, para que respiren. */
+.pub-bloque {
+  margin-bottom: var(--et-4);
+  padding: var(--et-5);
+  border-radius: 22px;
+  background: var(--et-vidrio-denso);
+  -webkit-backdrop-filter: blur(14px) saturate(1.5);
+  backdrop-filter: blur(14px) saturate(1.5);
+  border: 1px solid var(--et-vidrio-borde);
+  box-shadow: var(--et-sombra-sm);
+}
+.pub-bloque:last-child { margin-bottom: var(--et-6); }
 .pub-bloque h2 { font-size: var(--et-txt-lg); margin-bottom: var(--et-2); }
 .pub-punto { display: flex; gap: var(--et-2); align-items: center; }
 .pub-punto .et-icono { color: var(--et-coral); }
@@ -250,11 +477,18 @@
 }
 
 .pub-reserva {
-  background: var(--et-superficie);
-  border-radius: var(--et-radio-lg);
-  box-shadow: var(--et-sombra);
+  background: var(--et-vidrio-denso);
+  -webkit-backdrop-filter: blur(var(--et-desenfoque)) saturate(1.7);
+  backdrop-filter: blur(var(--et-desenfoque)) saturate(1.7);
+  border: 1px solid var(--et-vidrio-borde);
+  border-radius: 26px;
+  box-shadow: var(--et-vidrio-sombra);
   padding: var(--et-5);
   margin-bottom: var(--et-6);
+}
+/* En escritorio la ficha sube sobre la portada: se ve el cristal de verdad. */
+@media (min-width: 900px) {
+  .pub-detalle__lateral { margin-top: -110px; }
 }
 .pub-reserva__precio {
   display: flex;
@@ -266,8 +500,11 @@
   border-bottom: 1px solid var(--et-borde);
 }
 .pub-reserva__total {
-  background: var(--et-amarillo-suave);
-  border-radius: var(--et-radio-sm);
+  background: linear-gradient(135deg,
+    color-mix(in srgb, var(--et-amarillo) 32%, white),
+    color-mix(in srgb, var(--et-amarillo) 16%, white));
+  border: 1px solid color-mix(in srgb, var(--et-amarillo) 45%, white);
+  border-radius: 16px;
   padding: var(--et-3);
   text-align: center;
   margin-bottom: var(--et-4);
@@ -287,13 +524,17 @@
 }
 .pub-confirmacion__icono { font-size: 3.5rem; }
 .pub-confirmacion__caja {
-  background: var(--et-superficie);
-  border-radius: var(--et-radio-lg);
-  box-shadow: var(--et-sombra);
+  background: var(--et-vidrio-denso);
+  -webkit-backdrop-filter: blur(var(--et-desenfoque)) saturate(1.7);
+  backdrop-filter: blur(var(--et-desenfoque)) saturate(1.7);
+  border: 1px solid var(--et-vidrio-borde);
+  border-radius: 24px;
+  box-shadow: var(--et-vidrio-sombra);
   padding: var(--et-5);
-  margin-top: var(--et-5);
+  margin-top: var(--et-4);
   text-align: left;
 }
+.pub-confirmacion h1 { font-size: clamp(2rem, 8vw, 3rem); letter-spacing: -0.03em; }
 .pub-pago {
   display: flex;
   justify-content: space-between;
@@ -409,3 +650,59 @@
   transform: translateY(-2px);
   border-bottom-color: currentColor;
 }
+
+
+/* --- Estado vacío ---------------------------------------------------------- */
+.pub-viajes .et-vacio {
+  background: var(--et-vidrio-denso);
+  -webkit-backdrop-filter: blur(var(--et-desenfoque)) saturate(1.6);
+  backdrop-filter: blur(var(--et-desenfoque)) saturate(1.6);
+  border: 1px solid var(--et-vidrio-borde);
+  border-radius: 26px;
+  box-shadow: var(--et-vidrio-sombra);
+  padding: var(--et-8) var(--et-5);
+  grid-column: 1 / -1;
+}
+.pub-viajes .et-vacio__icono {
+  background: linear-gradient(140deg,
+    color-mix(in srgb, var(--et-turquesa) 30%, white),
+    color-mix(in srgb, var(--et-amarillo) 34%, white));
+  color: var(--et-marino);
+  padding: var(--et-4);
+  animation: et-flotar 4.5s ease-in-out infinite;
+}
+@keyframes et-flotar {
+  0%, 100% { transform: translateY(0); }
+  50%      { transform: translateY(-8px); }
+}
+
+/* Los esqueletos de carga también van en cristal. */
+.pub-esqueleto {
+  height: 420px;
+  border-radius: 26px;
+  background: linear-gradient(90deg,
+    rgba(255,255,255,0.32) 25%,
+    rgba(255,255,255,0.62) 50%,
+    rgba(255,255,255,0.32) 75%);
+  background-size: 200% 100%;
+  border: 1px solid var(--et-vidrio-borde);
+}
+
+/* Brillo que recorre los botones principales al pasar por encima. */
+.et-btn--sol:not([data-cargando])::after,
+.et-btn--wa:not([data-cargando])::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  width: 45%;
+  left: -60%;
+  background: linear-gradient(100deg, transparent, rgba(255,255,255,0.55), transparent);
+  transform: skewX(-18deg);
+  pointer-events: none;
+}
+.et-btn--sol:not([data-cargando]):hover:not(:disabled)::after,
+.et-btn--wa:not([data-cargando]):hover:not(:disabled)::after {
+  animation: et-brillar 750ms var(--et-suave);
+}
+@keyframes et-brillar { to { left: 120%; } }

@@ -65,6 +65,20 @@
   --et-7: 3rem;
   --et-8: 4rem;
 
+  /* --- Cristal (glassmorphism) -------------------------------------------
+     El cristal solo funciona si detrás hay algo que mirar: por eso el sitio
+     público lleva un degradado en movimiento de fondo y fotos a sangre. */
+  --et-vidrio: rgba(255, 255, 255, 0.62);
+  --et-vidrio-denso: rgba(255, 255, 255, 0.82);
+  --et-vidrio-oscuro: rgba(11, 59, 69, 0.42);
+  --et-vidrio-borde: rgba(255, 255, 255, 0.55);
+  --et-vidrio-borde-oscuro: rgba(255, 255, 255, 0.18);
+  --et-desenfoque: 18px;
+  --et-vidrio-sombra:
+    0 8px 24px rgba(11, 59, 69, 0.10),
+    0 24px 60px rgba(11, 59, 69, 0.12),
+    inset 0 1px 0 rgba(255, 255, 255, 0.6);
+
   /* --- Formas ----------------------------------------------------------- */
   --et-radio-sm: 8px;
   --et-radio: 14px;

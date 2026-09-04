@@ -47,7 +47,7 @@ export async function renderDetalle(tripId, { onVolver, onReservado }) {
     : '<div class="pub-detalle__portada"></div>';
 
   const lista = (titulo, items, marca) => items?.length ? `
-    <section class="pub-bloque">
+    <section class="pub-bloque et-revela">
       <h2>${titulo}</h2>
       <ul class="pub-lista">
         ${items.map((i, n) => `
@@ -73,13 +73,15 @@ export async function renderDetalle(tripId, { onVolver, onReservado }) {
           </header>
 
           ${viaje.descripcion ? `
-            <section class="pub-bloque"><p>${esc(viaje.descripcion)}</p></section>` : ''}
+            <section class="pub-bloque et-revela">
+              <p style="margin:0">${esc(viaje.descripcion)}</p>
+            </section>` : ''}
 
           ${lista('Qué incluye', viaje.incluye, icono('check', { tam: 16 }))}
           ${lista('Itinerario', viaje.itinerario, '<span class="pub-lista__punto"></span>')}
 
           ${viaje.puntoEncuentro ? `
-            <section class="pub-bloque">
+            <section class="pub-bloque et-revela">
               <h2>Punto de encuentro</h2>
               <p class="pub-punto">${icono('ubicacion', { tam: 18 })} ${esc(viaje.puntoEncuentro)}</p>
             </section>` : ''}

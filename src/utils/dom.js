@@ -56,3 +56,42 @@ export async function conCarga(boton, fn) {
 export function confirmar(mensaje) {
   return window.confirm(mensaje);
 }
+
+/**
+ * Hace aparecer los elementos a medida que entran en pantalla.
+ * Cada nodo debe llevar la clase .et-revela; al entrar se le añade .et-visible.
+ * Si el navegador no soporta IntersectionObserver, se muestran todos de una.
+ */
+export function revelarAlEntrar(nodos, { umbral = 0.12 } = {}) {
+  const lista = [...nodos];
+  if (!('IntersectionObserver' in window)) {
+    for (const n of lista) n.classList.add('et-visible');
+    return;
+  }
+  const observador = new IntersectionObserver((entradas) => {
+    for (const entrada of entradas) {
+      if (!entrada.isIntersecting) continue;
+      entrada.target.classList.add('et-visible');
+      observador.unobserve(entrada.target);
+    }
+  }, { threshold: umbral, rootMargin: '0px 0px -6% 0px' });
+  for (const n of lista) observador.observe(n);
+}
+
+/**
+ * Ejecuta `fn` en cada scroll, pero como mucho una vez por fotograma.
+ * Se usa para el parallax de la portada y para el estado de la cabecera.
+ */
+export function alHacerScroll(fn) {
+  let pendiente = false;
+  const manejar = () => {
+    if (pendiente) return;
+    pendiente = true;
+    requestAnimationFrame(() => {
+      pendiente = false;
+      fn(window.scrollY);
+    });
+  };
+  window.addEventListener('scroll', manejar, { passive: true });
+  manejar();
+}

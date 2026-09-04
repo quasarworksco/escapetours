@@ -18,10 +18,10 @@
   <link rel="stylesheet" href="styles/base.css">
   <link rel="stylesheet" href="styles/publico.css">
 </head>
-<body>
+<body class="pub">
 
   <!-- ===================== CABECERA ===================== -->
-  <header class="pub-header">
+  <header class="pub-header" id="cabecera">
     <div class="et-contenedor pub-header__interior">
       <a class="pub-marca" href="#/">
         <span class="pub-marca__logo" id="marca-logo"></span>
@@ -38,15 +38,25 @@
 
   <!-- ===================== CALENDARIO ===================== -->
   <main id="vista-calendario">
+
     <section class="pub-hero">
-      <div class="et-contenedor">
-        <h1 id="hero-titulo" class="et-entra">Próximos viajes</h1>
-        <p id="hero-subtitulo" class="et-entra" style="--i:1">Escoge tu destino, aparta tu cupo y nosotros nos encargamos del resto.</p>
+      <!-- Capa de foto: la pone el JS con la portada configurada o la del
+           próximo viaje. Si no hay ninguna, se ve el degradado del fondo. -->
+      <div class="pub-hero__foto" id="hero-foto" aria-hidden="true"></div>
+      <div class="pub-hero__velo" aria-hidden="true"></div>
+
+      <div class="et-contenedor pub-hero__contenido">
+        <span class="pub-hero__kicker et-entra" id="hero-kicker">Salidas desde Maracaibo</span>
+        <h1 id="hero-titulo" class="et-entra" style="--i:1">Próximos viajes</h1>
+        <p id="hero-subtitulo" class="et-entra" style="--i:2">
+          Escoge tu destino, aparta tu cupo y nosotros nos encargamos del resto.
+        </p>
+        <div class="pub-hero__datos et-entra" style="--i:3" id="hero-datos"></div>
       </div>
     </section>
 
-    <div class="et-contenedor">
-      <nav class="pub-meses" aria-label="Navegación por mes">
+    <div class="et-contenedor" id="viajes">
+      <nav class="pub-meses et-vidrio" aria-label="Navegación por mes">
         <button class="pub-meses__flecha" id="mes-anterior" type="button" aria-label="Mes anterior"></button>
         <h2 class="pub-meses__actual" id="mes-actual" aria-live="polite">—</h2>
         <button class="pub-meses__flecha" id="mes-siguiente" type="button" aria-label="Mes siguiente"></button>
