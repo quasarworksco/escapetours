@@ -24,9 +24,9 @@ let ultimaReserva = null;
 
 function aplicarMarca() {
   aplicarTemaDeMarca();
+  // Las etiquetas og:/twitter: están escritas en index.html, no aquí: los
+  // rastreadores de WhatsApp y las redes no ejecutan JavaScript.
   document.title = `${BRAND.nombre} · ${texto('heroTitulo')}`;
-  el('#og-title').content = document.title;
-  el('#og-desc').content = BRAND.descripcion;
 
   el('#marca-logo').innerHTML = logoHtml(36);
   el('#btn-wa-icono').innerHTML = icono('whatsapp', { tam: 16 });

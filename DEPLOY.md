@@ -167,7 +167,34 @@ El sitio ya es estático: no hay build. Publicar = hacer push.
 
 A partir de aquí, cada `git push` actualiza el sitio automáticamente.
 
-### Dominio propio (opcional)
+### Dominio propio (ya configurado)
+
+El sitio se publica en **escapetour.dgp-link.com** (archivo `CNAME` en la raíz).
+Al cambiar de dominio hay que tocar tres sitios:
+
+1. `CNAME` — el nombre del dominio, sin `https://`.
+2. **Firebase → Authentication → Settings → Dominios autorizados** — agregar el
+   dominio nuevo.
+3. `index.html` — las etiquetas `og:url`, `og:image` y `twitter:image`, que
+   llevan la dirección escrita a mano porque los rastreadores de WhatsApp y las
+   redes sociales no ejecutan JavaScript.
+
+### Cómo se ve al compartir el enlace
+
+`og.png` (1200×630) es la imagen que aparece en la vista previa de WhatsApp,
+Facebook, Instagram y X. Para regenerarla con otro diseño, sustituye el archivo
+manteniendo el mismo nombre y tamaño.
+
+Las redes cachean la vista previa. Si cambias la imagen o los textos y sigue
+saliendo la versión vieja, fuerza el refresco en
+<https://developers.facebook.com/tools/debug/> (funciona también para WhatsApp).
+
+Nota: al compartir el enlace de un viaje concreto (`.../#/viaje/abc123`) la
+vista previa muestra la tarjeta general del sitio, no la foto de ese viaje. Es
+una limitación de los sitios estáticos: lo que va después de `#` nunca llega al
+servidor, así que el rastreador solo ve la portada.
+
+### Otro dominio propio (opcional)
 
 Settings → Pages → *Custom domain* → `escapetoursmcbo.com`, y en tu proveedor
 de DNS apunta un `CNAME` a `<usuario>.github.io`. Recuerda agregar también ese

@@ -50,6 +50,17 @@ export const BRAND = {
     coral: '#F2603C',          // alertas y estados críticos
   },
 
+  // --- Sitio ----------------------------------------------------------------
+  // Dirección pública, usada para las etiquetas que leen WhatsApp, Facebook,
+  // Instagram y X al compartir el enlace. Tiene que ser absoluta y terminar
+  // sin barra final. Si cambias el dominio, actualiza también las etiquetas
+  // <meta property="og:..."> de index.html: los rastreadores no ejecutan
+  // JavaScript, así que ahí los valores van escritos literalmente.
+  sitio: {
+    url: 'https://escapetour.dgp-link.com',
+    imagenCompartir: '/og.png',
+  },
+
   // --- Imágenes -------------------------------------------------------------
   // Foto de portada del sitio público. Si la dejas en null, la portada usa la
   // foto del próximo viaje publicado; y si tampoco hay, se ve el degradado

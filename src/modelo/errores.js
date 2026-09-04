@@ -35,9 +35,27 @@ export function mensajeDeError(err) {
     'auth/wrong-password': 'Usuario o contraseña incorrectos.',
     'auth/too-many-requests':
       'Demasiados intentos fallidos. Espera unos minutos e inténtalo otra vez.',
-    'auth/network-request-failed': 'Falló la conexión. Revisa tu internet.',
+    'auth/user-disabled': 'Esta cuenta está deshabilitada en Firebase.',
+    // Las tres siguientes son fallos de configuración del proyecto, no del
+    // usuario: el mensaje dice exactamente qué falta hacer en la consola.
+    'auth/network-request-failed':
+      'No se pudo contactar con Firebase. Suele ser una de tres cosas: ' +
+      'Authentication todavía no está activado en la consola, una extensión ' +
+      'del navegador (bloqueador de anuncios) está bloqueando googleapis.com, ' +
+      'o no hay internet. Prueba primero en una ventana de incógnito.',
+    'auth/operation-not-allowed':
+      'El acceso con correo y contraseña no está habilitado. Actívalo en ' +
+      'Firebase → Authentication → Sign-in method.',
+    'auth/unauthorized-domain':
+      'Este dominio no está autorizado. Agrégalo en Firebase → Authentication ' +
+      '→ Settings → Dominios autorizados.',
+    'auth/invalid-api-key':
+      'La clave del proyecto no es válida. Revisa config/firebase.js.',
   };
   if (mapa[codigo]) return mapa[codigo];
   console.error('[Escape Tours]', err);
-  return 'Ocurrió un error inesperado. Inténtalo de nuevo en un momento.';
+  // El código técnico se muestra a propósito: sin él es imposible diagnosticar
+  // un fallo que solo ocurre en el navegador de otra persona.
+  return 'Ocurrió un error inesperado' + (codigo ? ` (${codigo})` : '') +
+    '. Inténtalo de nuevo en un momento.';
 }
