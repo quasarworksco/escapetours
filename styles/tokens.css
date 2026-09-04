@@ -1,0 +1,89 @@
+/* ==========================================================================
+   Design tokens — tema "sol y playa"
+   Los valores de color se sobrescriben en runtime desde config/brand.js
+   (ver aplicarTemaDeMarca). Los de aquí son el respaldo si el JS falla.
+   ========================================================================== */
+
+:root {
+  /* --- Marca ------------------------------------------------------------ */
+  --et-amarillo: #FFC233;
+  --et-amarillo-oscuro: #E5A312;
+  --et-turquesa: #14B8B3;
+  --et-turquesa-oscuro: #0A7C79;   /* contraste AA sobre blanco */
+  --et-arena: #FFF8EC;
+  --et-marino: #0B3B45;
+  --et-coral: #F2603C;
+
+  /* --- Derivados -------------------------------------------------------- */
+  --et-amarillo-suave: color-mix(in srgb, var(--et-amarillo) 18%, white);
+  --et-turquesa-suave: color-mix(in srgb, var(--et-turquesa) 14%, white);
+  --et-coral-suave: color-mix(in srgb, var(--et-coral) 12%, white);
+
+  /* --- Neutros ---------------------------------------------------------- */
+  --et-blanco: #ffffff;
+  --et-gris-50: #F7F7F5;
+  --et-gris-100: #EDEDE8;
+  --et-gris-200: #DFDFD8;
+  --et-gris-400: #A8AAA5;
+  --et-gris-600: #6B6F6C;
+  --et-gris-800: #34403F;
+
+  /* --- Semánticos ------------------------------------------------------- */
+  --et-fondo: var(--et-arena);
+  --et-superficie: var(--et-blanco);
+  --et-texto: var(--et-marino);
+  --et-texto-suave: var(--et-gris-600);
+  --et-borde: var(--et-gris-200);
+  --et-exito: #12855C;
+  --et-exito-suave: #E3F5EC;
+  --et-alerta: #A8630A;
+  --et-alerta-suave: #FDF1DC;
+  --et-error: #C5352A;
+  --et-error-suave: #FCEAE8;
+
+  /* --- Tipografía ------------------------------------------------------- */
+  --et-fuente-titulo: 'Outfit', 'Trebuchet MS', system-ui, sans-serif;
+  --et-fuente-texto: 'Inter', system-ui, -apple-system, 'Segoe UI', sans-serif;
+  --et-txt-xs: 0.75rem;
+  --et-txt-sm: 0.875rem;
+  --et-txt-base: 1rem;
+  --et-txt-lg: 1.125rem;
+  --et-txt-xl: 1.375rem;
+  --et-txt-2xl: 1.75rem;
+  --et-txt-3xl: 2.25rem;
+
+  /* --- Espaciado -------------------------------------------------------- */
+  --et-1: 0.25rem;
+  --et-2: 0.5rem;
+  --et-3: 0.75rem;
+  --et-4: 1rem;
+  --et-5: 1.5rem;
+  --et-6: 2rem;
+  --et-7: 3rem;
+  --et-8: 4rem;
+
+  /* --- Formas ----------------------------------------------------------- */
+  --et-radio-sm: 8px;
+  --et-radio: 14px;
+  --et-radio-lg: 22px;
+  --et-radio-full: 999px;
+
+  --et-sombra-sm: 0 1px 2px rgba(11, 59, 69, 0.06),
+                  0 1px 3px rgba(11, 59, 69, 0.08);
+  --et-sombra: 0 4px 10px rgba(11, 59, 69, 0.07),
+               0 12px 28px rgba(11, 59, 69, 0.08);
+  --et-sombra-lg: 0 10px 24px rgba(11, 59, 69, 0.10),
+                  0 28px 60px rgba(11, 59, 69, 0.12);
+
+  --et-ancho-max: 1120px;
+  --et-transicion: 160ms cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* Respeta a quien pide menos movimiento. */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}

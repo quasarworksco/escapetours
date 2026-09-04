@@ -1,0 +1,150 @@
+rules_version = '2';
+
+// =============================================================================
+//  REGLAS DE SEGURIDAD — Escape Tours Mcbo
+// -----------------------------------------------------------------------------
+//  Modelo de confianza:
+//    · Visitante anónimo  → LEE viajes y configuración. Solo puede CREAR una
+//                           reserva en estado "pendiente". No puede leer datos
+//                           de otros clientes, ni tocar cupos, ni ver pagos.
+//    · Admin autenticado  → control total. Se considera admin a quien tenga
+//                           sesión de Firebase Auth Y un documento en
+//                           /admins/{su-uid}. Ese documento se crea a mano
+//                           desde la consola de Firebase (ver DEPLOY.md).
+//
+//  Nota: el cupo de un viaje SOLO se descuenta cuando el admin confirma el
+//  pago. Por eso ningún usuario anónimo necesita escribir en /trips, y la
+//  colección queda de solo lectura para el público.
+//
+//  Cómo publicarlas: consola de Firebase → Firestore Database → pestaña
+//  "Reglas" → pegar este archivo completo → Publicar.
+// =============================================================================
+
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    // --- Helpers ------------------------------------------------------------
+
+    function esAdmin() {
+      return request.auth != null
+          && exists(/databases/$(database)/documents/admins/$(request.auth.uid));
+    }
+
+    function texto(v, min, max) {
+      return v is string && v.size() >= min && v.size() <= max;
+    }
+
+    function entero(v, min, max) {
+      return v is int && v >= min && v <= max;
+    }
+
+    function numero(v, min) {
+      return (v is int || v is float) && v >= min;
+    }
+
+    // Fecha civil "YYYY-MM-DD"
+    function fechaISO(v) {
+      return v is string && v.matches('^\\d{4}-\\d{2}-\\d{2}$');
+    }
+
+    function viaje(tripId) {
+      return get(/databases/$(database)/documents/trips/$(tripId)).data;
+    }
+
+    // --- /trips -------------------------------------------------------------
+    // Catálogo público. Escritura exclusiva del admin.
+
+    function viajeValido() {
+      let d = request.resource.data;
+      return texto(d.destino, 2, 120)
+          && fechaISO(d.fechaInicio)
+          && fechaISO(d.fechaFin)
+          && d.fechaFin >= d.fechaInicio
+          && d.mes == d.fechaInicio.split('-')[0] + '-' + d.fechaInicio.split('-')[1]
+          && numero(d.precio, 0)
+          && entero(d.cupoMaximo, 1, 500)
+          && entero(d.cuposConfirmados, 0, 500)
+          && d.cuposConfirmados <= d.cupoMaximo
+          && d.estado in ['activo', 'cancelado', 'finalizado']
+          && (!('fotoUrl' in d) || texto(d.fotoUrl, 0, 2000))
+          && (!('descripcion' in d) || texto(d.descripcion, 0, 4000));
+    }
+
+    match /trips/{tripId} {
+      allow read: if true;
+      allow create, update: if esAdmin() && viajeValido();
+      allow delete: if esAdmin();
+    }
+
+    // --- /bookings ----------------------------------------------------------
+    // Los datos personales de los clientes NUNCA son legibles públicamente.
+    // El público solo puede crear una reserva pendiente bien formada.
+
+    function reservaPublicaValida() {
+      let d = request.resource.data;
+      return d.keys().hasAll([
+               'tripId', 'nombreCliente', 'telefonoCliente',
+               'cantidadPersonas', 'estado', 'createdAt'
+             ])
+          && d.keys().hasOnly([
+               'tripId', 'tripDestino', 'tripFechaInicio', 'tripFechaFin',
+               'tripPrecio', 'nombreCliente', 'telefonoCliente', 'emailCliente',
+               'cantidadPersonas', 'notasCliente', 'estado', 'origen',
+               'createdAt', 'updatedAt'
+             ])
+          // Solo se puede nacer "pendiente": confirmar es potestad del admin.
+          && d.estado == 'pendiente'
+          && texto(d.nombreCliente, 2, 80)
+          && texto(d.telefonoCliente, 7, 25)
+          && entero(d.cantidadPersonas, 1, 10)   // = BRAND.reglas.maxPersonasPorReserva
+          && (!('emailCliente' in d) || texto(d.emailCliente, 0, 120))
+          && (!('notasCliente' in d) || texto(d.notasCliente, 0, 500))
+          && d.createdAt == request.time
+          // El viaje debe existir y estar abierto (evita basura y reservas
+          // apuntando a viajes cancelados o inexistentes).
+          && exists(/databases/$(database)/documents/trips/$(d.tripId))
+          && viaje(d.tripId).estado == 'activo'
+          // El snapshot del destino no se puede falsear.
+          && (!('tripDestino' in d) || d.tripDestino == viaje(d.tripId).destino);
+    }
+
+    match /bookings/{bookingId} {
+      allow read: if esAdmin();
+      allow create: if esAdmin() || reservaPublicaValida();
+      allow update, delete: if esAdmin();
+
+      // --- Pagos: subcolección privada del admin ---------------------------
+      match /pagos/{pagoId} {
+        allow read: if esAdmin();
+        allow create, update: if esAdmin()
+          && numero(request.resource.data.montoPagado, 0)
+          && entero(request.resource.data.personasConfirmadas, 0, 500)
+          && texto(request.resource.data.metodoPago, 1, 60);
+        allow delete: if esAdmin();
+      }
+    }
+
+    // --- /admins ------------------------------------------------------------
+    // La membresía de admin NO se otorga desde la app: los documentos se crean
+    // manualmente en la consola de Firebase. Así nadie puede auto-promoverse.
+
+    match /admins/{uid} {
+      allow read: if request.auth != null && request.auth.uid == uid;
+      allow write: if false;
+    }
+
+    // --- /config ------------------------------------------------------------
+    // Métodos de pago y datos bancarios: públicos a propósito (el cliente
+    // necesita verlos para pagar). Solo el admin los edita.
+
+    match /config/{documento} {
+      allow read: if true;
+      allow write: if esAdmin();
+    }
+
+    // --- Cierre por defecto -------------------------------------------------
+    match /{document=**} {
+      allow read, write: if false;
+    }
+  }
+}
