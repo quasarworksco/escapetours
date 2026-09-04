@@ -259,14 +259,14 @@ body.pub--conportada .pub-hero p { text-shadow: 0 1px 12px rgba(11, 59, 69, 0.35
 .pub-viajes {
   display: grid;
   gap: var(--et-5);
-  padding-bottom: var(--et-8);
+  padding-bottom: var(--et-7);
 }
 @media (min-width: 700px) {
   /* Las columnas tienen ancho acotado y la rejilla se centra: con uno o dos
      viajes las tarjetas mantienen su tamaño en vez de estirarse o dejar un
      hueco enorme a la derecha. */
   .pub-viajes {
-    grid-template-columns: repeat(auto-fit, minmax(320px, 360px));
+    grid-template-columns: repeat(auto-fit, minmax(280px, 340px));
     justify-content: center;
   }
 }
@@ -687,7 +687,7 @@ body.pub--conportada .pub-hero p { text-shadow: 0 1px 12px rgba(11, 59, 69, 0.35
    Cómo funciona
    ========================================================================== */
 
-.pub-pasos { padding-block: var(--et-6) var(--et-8); }
+.pub-pasos { padding-block: var(--et-7); }
 .pub-pasos__titulo {
   text-align: center;
   font-size: clamp(1.6rem, 6vw, 2.4rem);
@@ -879,7 +879,7 @@ body.pub--conportada .pub-hero p { text-shadow: 0 1px 12px rgba(11, 59, 69, 0.35
 
 /* --- Sobre nosotros -------------------------------------------------------- */
 .pub-sobre { padding-block: var(--et-7); }
-.pub-sobre__grid { display: grid; gap: var(--et-5); align-items: center; }
+.pub-sobre__grid { display: grid; gap: var(--et-5); align-items: stretch; }
 @media (min-width: 880px) {
   .pub-sobre__grid { grid-template-columns: 1.1fr 1fr; gap: var(--et-7); }
 }
@@ -906,7 +906,7 @@ body.pub--conportada .pub-hero p { text-shadow: 0 1px 12px rgba(11, 59, 69, 0.35
 }
 
 /* --- Galería --------------------------------------------------------------- */
-.pub-galeria { padding-block: var(--et-6) var(--et-7); }
+.pub-galeria { padding-block: var(--et-7); }
 .pub-galeria__grid {
   display: grid;
   gap: var(--et-3);
@@ -980,7 +980,7 @@ body.pub--conportada .pub-hero p { text-shadow: 0 1px 12px rgba(11, 59, 69, 0.35
 .pub-visor__cerrar:hover { transform: rotate(90deg); }
 
 /* --- Reseñas --------------------------------------------------------------- */
-.pub-resenas { padding-block: var(--et-6) var(--et-7); }
+.pub-resenas { padding-block: var(--et-7) var(--et-8); }
 .pub-resenas__grid {
   display: grid;
   gap: var(--et-4);
@@ -988,7 +988,7 @@ body.pub--conportada .pub-hero p { text-shadow: 0 1px 12px rgba(11, 59, 69, 0.35
 }
 @media (min-width: 760px) {
   .pub-resenas__grid {
-    grid-template-columns: repeat(auto-fit, minmax(280px, 360px));
+    grid-template-columns: repeat(auto-fit, minmax(260px, 330px));
     justify-content: center;
   }
 }
