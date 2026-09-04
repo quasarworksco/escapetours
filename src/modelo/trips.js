@@ -25,28 +25,34 @@ function aObjeto(snap) {
 
 // --- Lectura ---------------------------------------------------------------
 
-/** Viajes de un mes "YYYY-MM". Por defecto solo los que están abiertos. */
-export async function viajesDelMes(mes, { soloActivos = true } = {}) {
-  const snap = await getDocs(query(refTrips(), where('mes', '==', mes)));
-  return snap.docs
-    .map(aObjeto)
-    .filter((v) => !soloActivos || v.estado === 'activo')
-    .sort(porFecha);
+/**
+ * Todos los viajes abiertos al público, en una sola lectura cacheada.
+ * El calendario navega entre meses filtrando en memoria: así una sesión que
+ * revisa varios meses no vuelve a consultar Firestore.
+ */
+let cachePublica = null;
+export async function viajesPublicos({ refrescar = false } = {}) {
+  if (cachePublica && !refrescar) return cachePublica;
+  const snap = await getDocs(refTrips());
+  cachePublica = snap.docs.map(aObjeto).filter((v) => v.estado === 'activo').sort(porFecha);
+  return cachePublica;
+}
+
+/** Viajes de un mes "YYYY-MM". */
+export async function viajesDelMes(mes) {
+  return (await viajesPublicos()).filter((v) => v.mes === mes);
 }
 
 /** Todos los viajes (panel admin). */
 export async function todosLosViajes() {
   const snap = await getDocs(refTrips());
+  cachePublica = null;  // el panel acaba de leer datos frescos
   return snap.docs.map(aObjeto).sort(porFecha).reverse();
 }
 
 /** Meses que tienen al menos un viaje activo, ordenados. */
 export async function mesesConViajes() {
-  const snap = await getDocs(refTrips());
-  const meses = new Set(
-    snap.docs.map((d) => d.data()).filter((v) => v.estado === 'activo').map((v) => v.mes)
-  );
-  return [...meses].sort();
+  return [...new Set((await viajesPublicos()).map((v) => v.mes))].sort();
 }
 
 export async function obtenerViaje(id) {

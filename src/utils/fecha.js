@@ -86,6 +86,24 @@ export function rangoFechas(inicio, fin) {
   return `${fechaCorta(inicio)} al ${fechaCorta(fin)} de ${anio}`;
 }
 
+const MESES_CORTOS = ['ene', 'feb', 'mar', 'abr', 'may', 'jun',
+                      'jul', 'ago', 'sep', 'oct', 'nov', 'dic'];
+
+/**
+ * Rango compacto para las cintas de las tarjetas, donde no cabe el texto largo.
+ *   "17 sep" · "24–27 sep" · "28 sep – 2 oct"
+ */
+export function rangoCorto(inicio, fin) {
+  const a = aDateUTC(inicio);
+  if (!fin || fin === inicio) return `${a.getUTCDate()} ${MESES_CORTOS[a.getUTCMonth()]}`;
+  const b = aDateUTC(fin);
+  if (a.getUTCMonth() === b.getUTCMonth()) {
+    return `${a.getUTCDate()}–${b.getUTCDate()} ${MESES_CORTOS[b.getUTCMonth()]}`;
+  }
+  return `${a.getUTCDate()} ${MESES_CORTOS[a.getUTCMonth()]} – ` +
+         `${b.getUTCDate()} ${MESES_CORTOS[b.getUTCMonth()]}`;
+}
+
 /** Cantidad de días que dura el viaje (inclusive). */
 export function duracionEnDias(inicio, fin) {
   if (!fin || fin === inicio) return 1;

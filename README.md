@@ -12,6 +12,7 @@ Calendario de viajes y sistema de reservas para **Escape Tours Mcbo**
 | Vista | Para quién | Qué permite |
 |---|---|---|
 | `index.html` | Público | Ver los viajes del mes, entrar al detalle y reservar cupo |
+| `index.html#/viaje/<id>` | Público | Enlace directo a un viaje, listo para pegar en Instagram o WhatsApp |
 | `admin.html` | Agencia | Crear/editar viajes, ver reservas, confirmar pagos, controlar cupos |
 
 ## Cómo funciona una reserva

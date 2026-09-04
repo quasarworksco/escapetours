@@ -128,6 +128,7 @@ Luego abre:
 
 - Sitio público: <http://localhost:8080/>
 - Panel admin:  <http://localhost:8080/admin.html>
+- Datos de ejemplo: <http://localhost:8080/seed/> (inicia sesión en el panel primero)
 
 **Autoriza el dominio local:** Firebase Authentication → pestaña *Settings* →
 *Dominios autorizados* → agrega `localhost` si no aparece.
