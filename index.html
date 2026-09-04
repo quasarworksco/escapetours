@@ -88,6 +88,77 @@
       <div id="lista-viajes" class="pub-viajes"></div>
     </div>
 
+    <!-- ---------- SOBRE NOSOTROS ---------- -->
+    <section class="pub-sobre" id="sobre-nosotros" hidden>
+      <div class="et-contenedor pub-sobre__grid">
+        <div class="pub-sobre__texto et-revela">
+          <h2 id="sobre-titulo">Sobre nosotros</h2>
+          <p id="sobre-parrafo"></p>
+          <ul class="pub-lista" id="sobre-puntos"></ul>
+        </div>
+        <div class="pub-sobre__foto et-revela" id="sobre-foto" style="--i:1" hidden></div>
+      </div>
+    </section>
+
+    <!-- ---------- GALERÍA ---------- -->
+    <section class="pub-galeria" id="galeria" hidden>
+      <div class="et-contenedor">
+        <h2 class="pub-seccion__titulo et-revela">Nuestros viajes</h2>
+        <p class="pub-seccion__sub et-revela" style="--i:1">
+          Momentos de los grupos que ya se fueron con nosotros.
+        </p>
+        <div class="pub-galeria__grid" id="galeria-grid"></div>
+      </div>
+    </section>
+
+    <!-- ---------- RESEÑAS ---------- -->
+    <section class="pub-resenas" id="resenas">
+      <div class="et-contenedor">
+        <h2 class="pub-seccion__titulo et-revela">Lo que dicen los Mochileros</h2>
+        <p class="pub-seccion__sub et-revela" style="--i:1" id="resenas-resumen"></p>
+
+        <div class="pub-resenas__grid" id="resenas-grid"></div>
+
+        <div class="pub-resenas__caja et-revela" id="resena-caja">
+          <h3>¿Viajaste con nosotros? Cuéntanos</h3>
+          <p class="et-ayuda">
+            Tu reseña se publica después de que la revisemos.
+          </p>
+
+          <form id="form-resena" novalidate>
+            <div class="et-campo">
+              <label for="res-nombre">Tu nombre *</label>
+              <input class="et-input" id="res-nombre" maxlength="60" required
+                     placeholder="María Fernanda">
+              <span class="et-error-campo" data-error="res-nombre" hidden></span>
+            </div>
+
+            <div class="et-campo">
+              <span class="pub-estrellas__etiqueta">¿Cuántas estrellas nos das? *</span>
+              <div class="pub-estrellas" id="res-estrellas" role="radiogroup"
+                   aria-label="Calificación"></div>
+              <span class="et-error-campo" data-error="res-calificacion" hidden></span>
+            </div>
+
+            <div class="et-campo">
+              <label for="res-texto">Tu experiencia *</label>
+              <textarea class="et-textarea" id="res-texto" maxlength="600" required
+                        placeholder="Cuéntanos cómo te fue en el viaje…"></textarea>
+              <span class="et-ayuda"><span id="res-contador">0</span>/600</span>
+              <span class="et-error-campo" data-error="res-texto" hidden></span>
+            </div>
+
+            <p class="et-aviso et-aviso--error" id="res-error" hidden></p>
+            <p class="et-aviso et-aviso--ok" id="res-ok" hidden></p>
+
+            <button class="et-btn et-btn--sol et-btn--bloque" type="submit" id="btn-resena">
+              Enviar mi reseña
+            </button>
+          </form>
+        </div>
+      </div>
+    </section>
+
     <section class="pub-pasos">
       <div class="et-contenedor">
         <h2 class="pub-pasos__titulo et-revela" id="pasos-titulo">Reservar es así de fácil</h2>

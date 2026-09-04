@@ -124,6 +124,37 @@ service cloud.firestore {
       }
     }
 
+    // --- /resenas -----------------------------------------------------------
+    // Cualquiera puede dejar una resena, pero nace PENDIENTE y no se ve en la
+    // web hasta que el admin la aprueba. Sin esa moderacion, cualquiera podria
+    // publicar spam o insultos en la pagina de la agencia.
+    //
+    // Para listarlas, la consulta publica DEBE filtrar por
+    // estado == 'aprobada': Firestore rechaza cualquier consulta que pudiera
+    // devolver documentos que la regla no permite leer.
+
+    function resenaPublicaValida() {
+      let d = request.resource.data;
+      return d.keys().hasAll(['nombreCliente', 'texto', 'calificacion', 'estado', 'createdAt'])
+          && d.keys().hasOnly([
+               'nombreCliente', 'texto', 'calificacion',
+               'tripId', 'tripDestino', 'estado', 'createdAt', 'updatedAt'
+             ])
+          && d.estado == 'pendiente'
+          && texto(d.nombreCliente, 2, 60)
+          && texto(d.texto, 10, 600)
+          && entero(d.calificacion, 1, 5)
+          && (!('tripId' in d) || texto(d.tripId, 0, 60))
+          && (!('tripDestino' in d) || texto(d.tripDestino, 0, 120))
+          && d.createdAt == request.time;
+    }
+
+    match /resenas/{resenaId} {
+      allow read: if esAdmin() || resource.data.estado == 'aprobada';
+      allow create: if esAdmin() || resenaPublicaValida();
+      allow update, delete: if esAdmin();
+    }
+
     // --- /admins ------------------------------------------------------------
     // La membresía de admin NO se otorga desde la app: los documentos se crean
     // manualmente en la consola de Firebase. Así nadie puede auto-promoverse.

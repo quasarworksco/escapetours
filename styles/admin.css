@@ -516,3 +516,28 @@
   color: var(--et-turquesa-oscuro);
 }
 .admin-sugerencia--puesta::before { content: '\2713\00a0'; font-weight: 700; }
+
+/* --- Reseñas -------------------------------------------------------------- */
+.admin-resena__estrellas { color: var(--et-amarillo-oscuro); letter-spacing: 1px; }
+.admin-resena__vacias { color: var(--et-gris-200); }
+
+/* --- Galería del editor de contenido -------------------------------------- */
+.admin-foto {
+  display: grid;
+  gap: var(--et-2);
+  grid-template-columns: 1fr;
+  align-items: center;
+  padding: var(--et-3) 0;
+  border-bottom: 1px solid var(--et-borde);
+}
+@media (min-width: 760px) {
+  .admin-foto { grid-template-columns: 64px 1fr 220px auto; }
+}
+.admin-foto__mini {
+  width: 64px;
+  height: 64px;
+  object-fit: cover;
+  border-radius: var(--et-radio-sm);
+  border: 1px solid var(--et-borde);
+  background: var(--et-gris-100);
+}

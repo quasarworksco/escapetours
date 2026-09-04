@@ -78,6 +78,10 @@
         <button class="admin-tab" data-tab="reservas" type="button">
           Reservas <span class="admin-tab__contador" id="contador-pendientes" hidden></span>
         </button>
+        <button class="admin-tab" data-tab="resenas" type="button">
+          Reseñas <span class="admin-tab__contador" id="contador-resenas" hidden></span>
+        </button>
+        <button class="admin-tab" data-tab="contenido" type="button">Contenido</button>
         <button class="admin-tab" data-tab="ajustes" type="button">Datos de pago</button>
       </nav>
     </header>
@@ -131,6 +135,43 @@
         </div>
 
         <div id="lista-reservas" class="admin-reservas"></div>
+      </section>
+
+      <!-- ---------- RESEÑAS ---------- -->
+      <section id="tab-resenas" class="admin-seccion" hidden>
+        <div class="admin-seccion__titulo">
+          <div>
+            <h2>Reseñas</h2>
+            <p class="admin-seccion__sub" id="resumen-resenas"></p>
+          </div>
+        </div>
+
+        <div class="admin-filtros">
+          <div class="et-campo">
+            <label for="filtro-resena">Estado</label>
+            <select class="et-select" id="filtro-resena">
+              <option value="pendiente">Por revisar</option>
+              <option value="aprobada">Publicadas</option>
+              <option value="rechazada">Rechazadas</option>
+              <option value="">Todas</option>
+            </select>
+          </div>
+        </div>
+
+        <div id="lista-resenas" class="admin-reservas"></div>
+      </section>
+
+      <!-- ---------- CONTENIDO ---------- -->
+      <section id="tab-contenido" class="admin-seccion" hidden>
+        <div class="admin-seccion__titulo">
+          <div>
+            <h2>Contenido de la página</h2>
+            <p class="admin-seccion__sub">
+              El texto de "Sobre nosotros" y las fotos de la galería.
+            </p>
+          </div>
+        </div>
+        <div id="editor-contenido" class="et-tarjeta"></div>
       </section>
 
       <!-- ---------- AJUSTES ---------- -->

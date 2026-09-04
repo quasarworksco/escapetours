@@ -5,10 +5,12 @@
 import { todosLosViajes } from '../modelo/trips.js';
 import { todasLasReservas } from '../modelo/bookings.js';
 import { obtenerConfig } from '../modelo/config.js';
+import { todasLasResenas } from '../modelo/resenas.js';
 
 export const estado = {
   viajes: [],
   reservas: [],
+  resenas: [],
   config: null,
   cargando: true,
   error: null,
@@ -30,13 +32,15 @@ export async function cargarTodo() {
   estado.error = null;
   notificar();
   try {
-    const [viajes, reservas, config] = await Promise.all([
+    const [viajes, reservas, resenas, config] = await Promise.all([
       todosLosViajes(),
       todasLasReservas(),
+      todasLasResenas(),
       obtenerConfig({ refrescar: true }),
     ]);
     estado.viajes = viajes;
     estado.reservas = reservas;
+    estado.resenas = resenas;
     estado.config = config;
   } catch (err) {
     estado.error = err;
@@ -51,6 +55,11 @@ export async function recargarDatos() {
   const [viajes, reservas] = await Promise.all([todosLosViajes(), todasLasReservas()]);
   estado.viajes = viajes;
   estado.reservas = reservas;
+  notificar();
+}
+
+export async function recargarResenas() {
+  estado.resenas = await todasLasResenas();
   notificar();
 }
 

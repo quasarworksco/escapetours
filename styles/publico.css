@@ -854,3 +854,207 @@ body.pub--conportada .pub-hero p { text-shadow: 0 1px 12px rgba(11, 59, 69, 0.35
 @media (min-width: 700px) {
   .pub-footer__base-interior { justify-content: space-between; text-align: left; }
 }
+
+/* ==========================================================================
+   Sobre nosotros · Galería · Reseñas
+   ========================================================================== */
+
+.pub-seccion__titulo {
+  text-align: center;
+  font-size: clamp(1.6rem, 6vw, 2.4rem);
+  letter-spacing: -0.03em;
+  margin-bottom: var(--et-2);
+}
+.pub-seccion__sub {
+  text-align: center;
+  color: var(--et-texto-suave);
+  margin-bottom: var(--et-6);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--et-2);
+  flex-wrap: wrap;
+}
+.pub-seccion__sub strong { color: var(--et-marino); font-size: var(--et-txt-lg); }
+
+/* --- Sobre nosotros -------------------------------------------------------- */
+.pub-sobre { padding-block: var(--et-7); }
+.pub-sobre__grid { display: grid; gap: var(--et-5); align-items: center; }
+@media (min-width: 880px) {
+  .pub-sobre__grid { grid-template-columns: 1.1fr 1fr; gap: var(--et-7); }
+}
+.pub-sobre__texto {
+  padding: var(--et-6);
+  border-radius: 26px;
+  background: var(--et-vidrio-denso);
+  -webkit-backdrop-filter: blur(var(--et-desenfoque)) saturate(1.6);
+  backdrop-filter: blur(var(--et-desenfoque)) saturate(1.6);
+  border: 1px solid var(--et-vidrio-borde);
+  box-shadow: var(--et-vidrio-sombra);
+}
+.pub-sobre__texto h2 {
+  font-size: clamp(1.6rem, 6vw, 2.2rem);
+  letter-spacing: -0.03em;
+}
+.pub-sobre__texto p { color: var(--et-texto-suave); margin-bottom: var(--et-4); }
+.pub-sobre__foto {
+  min-height: 300px;
+  border-radius: 26px;
+  background-size: cover;
+  background-position: center;
+  box-shadow: var(--et-vidrio-sombra);
+}
+
+/* --- Galería --------------------------------------------------------------- */
+.pub-galeria { padding-block: var(--et-6) var(--et-7); }
+.pub-galeria__grid {
+  display: grid;
+  gap: var(--et-3);
+  grid-template-columns: repeat(2, 1fr);
+}
+@media (min-width: 700px) { .pub-galeria__grid { grid-template-columns: repeat(3, 1fr); } }
+@media (min-width: 1000px) { .pub-galeria__grid { grid-template-columns: repeat(4, 1fr); } }
+
+.pub-galeria__foto {
+  position: relative;
+  display: block;
+  padding: 0;
+  border: 1px solid var(--et-vidrio-borde);
+  border-radius: 18px;
+  overflow: hidden;
+  aspect-ratio: 1;
+  cursor: zoom-in;
+  background: var(--et-gris-100);
+  box-shadow: var(--et-sombra-sm);
+  transition: transform var(--et-t-media) var(--et-salida),
+              box-shadow var(--et-t-media) var(--et-salida);
+}
+/* La primera foto ocupa el doble en pantallas grandes: rompe la cuadrícula. */
+@media (min-width: 700px) {
+  .pub-galeria__foto:first-child { grid-column: span 2; grid-row: span 2; aspect-ratio: 1; }
+}
+.pub-galeria__foto.et-visible:hover { transform: translateY(-4px); box-shadow: var(--et-sombra); }
+.pub-galeria__foto img { width: 100%; height: 100%; object-fit: cover; transition: transform var(--et-t-lenta) var(--et-salida); }
+.pub-galeria__foto:hover img { transform: scale(1.07); }
+.pub-galeria__pie {
+  position: absolute;
+  left: 0; right: 0; bottom: 0;
+  padding: var(--et-4) var(--et-3) var(--et-2);
+  font-size: var(--et-txt-xs);
+  font-weight: 600;
+  color: var(--et-blanco);
+  text-align: left;
+  background: linear-gradient(transparent, rgba(11, 59, 69, 0.8));
+}
+
+/* Visor a pantalla completa */
+.pub-visor {
+  border: none;
+  padding: 0;
+  background: transparent;
+  max-width: min(94vw, 1100px);
+  max-height: 94dvh;
+}
+.pub-visor::backdrop { background: rgba(11, 59, 69, 0.82); backdrop-filter: blur(6px); }
+.pub-visor img {
+  max-width: 100%;
+  max-height: 82dvh;
+  border-radius: 20px;
+  box-shadow: var(--et-sombra-lg);
+  animation: et-emerger var(--et-t-media) var(--et-salida) backwards;
+}
+.pub-visor__titulo { color: var(--et-blanco); text-align: center; margin-top: var(--et-3); }
+.pub-visor__cerrar {
+  position: absolute;
+  top: -6px; right: -6px;
+  width: 42px; height: 42px;
+  display: grid; place-items: center;
+  border: none;
+  border-radius: 50%;
+  background: var(--et-blanco);
+  color: var(--et-marino);
+  cursor: pointer;
+  box-shadow: var(--et-sombra);
+  transition: transform var(--et-t-rapida) var(--et-rebote);
+}
+.pub-visor__cerrar:hover { transform: rotate(90deg); }
+
+/* --- Reseñas --------------------------------------------------------------- */
+.pub-resenas { padding-block: var(--et-6) var(--et-7); }
+.pub-resenas__grid {
+  display: grid;
+  gap: var(--et-4);
+  margin-bottom: var(--et-6);
+}
+@media (min-width: 760px) {
+  .pub-resenas__grid {
+    grid-template-columns: repeat(auto-fit, minmax(280px, 360px));
+    justify-content: center;
+  }
+}
+
+.pub-resena {
+  padding: var(--et-5);
+  border-radius: 22px;
+  background: var(--et-vidrio-denso);
+  -webkit-backdrop-filter: blur(14px) saturate(1.5);
+  backdrop-filter: blur(14px) saturate(1.5);
+  border: 1px solid var(--et-vidrio-borde);
+  box-shadow: var(--et-sombra-sm);
+  display: flex;
+  flex-direction: column;
+  gap: var(--et-3);
+  transition: transform var(--et-t-media) var(--et-salida),
+              box-shadow var(--et-t-media) var(--et-salida);
+}
+.pub-resena.et-visible:hover { transform: translateY(-4px); box-shadow: var(--et-sombra); }
+.pub-resena__estrellas { color: var(--et-amarillo-oscuro); }
+.pub-resena__texto { margin: 0; flex: 1; }
+.pub-resena__pie {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: var(--et-1) var(--et-3);
+  font-size: var(--et-txt-sm);
+  color: var(--et-texto-suave);
+  border-top: 1px solid var(--et-borde);
+  padding-top: var(--et-3);
+}
+.pub-resena__pie strong { color: var(--et-marino); }
+.pub-resena__fecha { margin-left: auto; font-size: var(--et-txt-xs); }
+
+.pub-estrellas__fila { display: inline-flex; gap: 2px; vertical-align: -0.2em; }
+
+/* Formulario de reseña */
+.pub-resenas__caja {
+  max-width: 620px;
+  margin-inline: auto;
+  padding: var(--et-6);
+  border-radius: 26px;
+  background: var(--et-vidrio-denso);
+  -webkit-backdrop-filter: blur(var(--et-desenfoque)) saturate(1.7);
+  backdrop-filter: blur(var(--et-desenfoque)) saturate(1.7);
+  border: 1px solid var(--et-vidrio-borde);
+  box-shadow: var(--et-vidrio-sombra);
+}
+.pub-resenas__caja h3 { font-size: var(--et-txt-xl); margin-bottom: var(--et-1); }
+.pub-resenas__caja > .et-ayuda { display: block; margin-bottom: var(--et-5); }
+
+.pub-estrellas__etiqueta {
+  display: block;
+  font-size: var(--et-txt-sm);
+  font-weight: 650;
+  margin-bottom: var(--et-2);
+}
+.pub-estrellas { display: flex; gap: var(--et-1); }
+.pub-estrella {
+  appearance: none;
+  border: none;
+  background: none;
+  padding: var(--et-1);
+  cursor: pointer;
+  color: var(--et-gris-400);
+  transition: transform var(--et-t-rapida) var(--et-rebote), color var(--et-transicion);
+}
+.pub-estrella:hover { transform: scale(1.18); color: var(--et-amarillo-oscuro); }
+.pub-estrella--activa { color: var(--et-amarillo-oscuro); }

@@ -9,6 +9,8 @@ import { estado, cargarTodo, alCambiar } from './estado.js';
 import { initViajes, renderViajes } from './viajes-ui.js';
 import { initReservas, renderReservas, filtrarPorViaje } from './reservas-ui.js';
 import { initAjustes, renderAjustes } from './ajustes-ui.js';
+import { initResenas, renderResenas } from './resenas-ui.js';
+import { renderContenido } from './contenido-ui.js';
 
 let panelIniciado = false;
 let tabActiva = 'viajes';
@@ -46,10 +48,11 @@ function cambiarTab(nombre) {
     const activa = boton.dataset.tab === nombre;
     boton.setAttribute('aria-current', activa ? 'page' : 'false');
   }
-  el('#tab-viajes').hidden = nombre !== 'viajes';
-  el('#tab-reservas').hidden = nombre !== 'reservas';
-  el('#tab-ajustes').hidden = nombre !== 'ajustes';
+  for (const clave of ['viajes', 'reservas', 'resenas', 'contenido', 'ajustes']) {
+    el(`#tab-${clave}`).hidden = nombre !== clave;
+  }
   if (nombre === 'ajustes') renderAjustes();
+  if (nombre === 'contenido') renderContenido();
 
   // Reinicia la animación de entrada de la sección visible.
   const seccion = el(`#tab-${nombre}`);
@@ -112,6 +115,7 @@ function iniciarPanel(admin) {
       },
     });
     initReservas();
+    initResenas();
     initAjustes();
 
     alCambiar(() => {
@@ -120,7 +124,9 @@ function iniciarPanel(admin) {
       }
       renderViajes();
       renderReservas();
+      renderResenas();
       if (tabActiva === 'ajustes') renderAjustes();
+      if (tabActiva === 'contenido') renderContenido();
     });
   }
 

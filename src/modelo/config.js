@@ -23,6 +23,25 @@ export const CONFIG_POR_DEFECTO = {
     'Puedes abonar el 50% para apartar tu cupo y el resto hasta 5 días antes de la salida. ' +
     'Envíanos el comprobante por WhatsApp para confirmarte.',
   mostrarDatosDePago: true,
+
+  // Sección "Sobre nosotros" de la página pública.
+  sobreNosotros: {
+    titulo: 'Sobre nosotros',
+    texto:
+      'Somos una agencia de Maracaibo que organiza viajes grupales por toda ' +
+      'Venezuela. Nos encargamos del transporte, la posada y la logística para ' +
+      'que tú solo pienses en disfrutar. Grupos pequeños, precios claros y ' +
+      'gente con ganas de conocer el país.',
+    puntos: [
+      'Salidas todos los meses',
+      'Grupos pequeños y acompañados',
+      'Precios cerrados, sin sorpresas',
+    ],
+    fotoUrl: '',
+  },
+
+  // Galería de fotos de viajes pasados: [{ url, titulo }]
+  galeria: [],
 };
 
 let cache = null;
@@ -52,6 +71,17 @@ export async function guardarConfig(datos) {
       .filter((m) => m.nombre),
     instruccionesPago: String(datos.instruccionesPago || '').trim(),
     mostrarDatosDePago: datos.mostrarDatosDePago !== false,
+    sobreNosotros: {
+      titulo: String(datos.sobreNosotros?.titulo || '').trim(),
+      texto: String(datos.sobreNosotros?.texto || '').trim(),
+      puntos: (datos.sobreNosotros?.puntos || [])
+        .map((p) => String(p).trim())
+        .filter(Boolean),
+      fotoUrl: String(datos.sobreNosotros?.fotoUrl || '').trim(),
+    },
+    galeria: (datos.galeria || [])
+      .map((f) => ({ url: String(f.url || '').trim(), titulo: String(f.titulo || '').trim() }))
+      .filter((f) => f.url),
     updatedAt: serverTimestamp(),
   };
   await setDoc(refConfig(), limpio, { merge: true });

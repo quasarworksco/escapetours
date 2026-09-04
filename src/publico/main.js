@@ -13,6 +13,7 @@ import { precio } from '../utils/formato.js';
 import { urlImagenValida } from '../utils/formato.js';
 import { hoyISO } from '../utils/fecha.js';
 import { initCalendario } from './calendario.js';
+import { initSecciones } from './secciones.js';
 import { renderDetalle } from './detalle.js';
 import { renderConfirmacion } from './reserva.js';
 
@@ -198,6 +199,7 @@ async function main() {
   await initCalendario({ onVerViaje: (id) => { location.hash = `#/viaje/${id}`; } });
   await enrutar();
   revelarAlEntrar(document.querySelectorAll('.pub-pasos .et-revela'));
+  await initSecciones();
 
   // Los viajes ya están en memoria: no cuesta ninguna lectura extra.
   try {
